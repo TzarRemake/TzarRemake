@@ -12,7 +12,6 @@ project(TzarRemake)
 include_directories("${PROJECT_BINARY_DIR}")
 
 # Define sources and executable
-# ------------------ Engine lib ------------------
 file(GLOB SOURCES
   "src/*.cpp"
   "src/*.h"
