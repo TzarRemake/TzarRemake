@@ -13,12 +13,13 @@ matrix:
             - unzip
 
       before_script:
-        - wget https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-64-bit.zip -o sfml.zip
-        - ls
-        - unzip sfml.zip -d sfml
-        - export SFML_ROOT="~/sfml"
+        - wget -O sfml.zip https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-64-bit.zip
+        - tar -xvf sfml.zip -C /usr/local
         - mkdir build
         - cd build
         - cmake -DCMAKE_BUILD_TYPE=Release ..
 
+      after_script:
+        - rm sfml.zip
+        
       script: make
