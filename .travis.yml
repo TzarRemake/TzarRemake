@@ -10,8 +10,12 @@ matrix:
           packages:
             - gcc-6
             - g++-6
+            - unzip
 
       before_script:
+        - wget https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-64-bit.zip -o sfml.zip
+        - unzip sfml.zip -d sfml
+        - export SFML_ROOT="~/sfml"
         - mkdir build
         - cd build
         - cmake -DCMAKE_BUILD_TYPE=Release ..
