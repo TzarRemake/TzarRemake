@@ -1,4 +1,4 @@
-# TzarRemake
+# TzarRemake [![Build Status](https://travis-ci.org/TzarRemake/TzarRemake.svg?branch=master)](https://travis-ci.org/TzarRemake/TzarRemake)
 Is an fanmade remake of game **Tzar: The Burden Of The Crown**.
 
 # Building
