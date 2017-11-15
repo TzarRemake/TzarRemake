@@ -15,7 +15,8 @@ matrix:
       before_script:
         - wget -O sfml.zip https://www.sfml-dev.org/files/SFML-2.4.2-windows-gcc-6.1.0-mingw-64-bit.zip
         - unzip sfml.zip
-        - export SFML_ROOT=`pwd`
+        - export SFML_ROOT="`pwd`/SFML-2.4.2"
+        - echo $SFML_ROOT
         - mkdir build
         - cd build
         - cmake -DCMAKE_BUILD_TYPE=Release ..
