@@ -3,3 +3,8 @@
 
 # Build directory
 build/
+
+# CMake files
+CMakeFiles/
+Makefile
+CMakeLists.txt.user
