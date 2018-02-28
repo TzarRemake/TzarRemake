@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Enable debug symbols by default
 if(NOT CMAKE_BUILD_TYPE)
@@ -13,6 +14,8 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Define sources and executable
 file(GLOB SOURCES
+  "src/states/*.cpp"
+  "src/states/*.h"
   "src/*.cpp"
   "src/*.h"
 )

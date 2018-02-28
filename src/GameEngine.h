@@ -16,16 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
+#include <memory>
+#include <vector>
+#include <utility>
+#include <SFML/Graphics.hpp>
+
 //--------------------------------------------------------------------------
 
-#include "GameEngine.h"
+#include "StateMachine.h"
 
 //--------------------------------------------------------------------------
 
-int main(int argc, char* argv[])
+class GameEngine final
 {
-    GameEngine engine;
-    int code = engine.run();
+public:
+    inline std::unique_ptr<sf::RenderWindow>& window() { return m_pWindow; }
 
-    return code;
-}
+    void shutdown();
+    int run();
+
+private:
+    void init();
+    void handleEvents(sf::Event& event);
+    void update();
+
+    std::unique_ptr<sf::RenderWindow> m_pWindow;
+    StateMachine states;
+
+    sf::Clock m_clock;
+    bool m_fullscreen = false;
+};

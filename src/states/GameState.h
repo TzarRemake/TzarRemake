@@ -16,16 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-//--------------------------------------------------------------------------
-
-#include "GameEngine.h"
+#pragma once
 
 //--------------------------------------------------------------------------
 
-int main(int argc, char* argv[])
+class GameEngine;
+
+//--------------------------------------------------------------------------
+
+class GameState
 {
-    GameEngine engine;
-    int code = engine.run();
+public:
+    GameState(GameEngine& engine) : m_engine(engine) {}
 
-    return code;
-}
+    template<typename... Ts>
+    void init(Ts&&... args) {};
+    virtual void pause() = 0;
+    virtual void shutdown() = 0;
+    virtual void handleEvents(sf::Event& event) = 0;
+    virtual void update(sf::Time& delta) = 0;
+
+protected:
+    GameEngine& m_engine;
+};
