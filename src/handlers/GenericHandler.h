@@ -53,17 +53,17 @@ struct GenericHandler
         return index != INVALID;
     }
 
-    GenericHandler& operator=(GenericHandler&& other) noexcept
+    inline GenericHandler& operator=(GenericHandler&& rhs) noexcept
     {
-        index = other.index;
-        counter = other.counter;
+        index = rhs.index;
+        counter = rhs.counter;
 
         return *this;
     }
 
-    bool operator==(GenericHandler&& other) noexcept
+    inline bool operator==(GenericHandler&& rhs) noexcept
     {
-        return index == other.index && counter == other.counter;
+        return index == rhs.index && counter == rhs.counter;
     }
 
     uint32_t index : indexBits;
