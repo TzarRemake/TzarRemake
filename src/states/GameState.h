@@ -20,7 +20,18 @@
 
 //--------------------------------------------------------------------------
 
+#include <SFML/System.hpp>
+
+//--------------------------------------------------------------------------
+
+
 class GameEngine;
+
+namespace sf
+{
+    class Event;
+};
+
 
 //--------------------------------------------------------------------------
 
@@ -30,7 +41,7 @@ public:
     GameState(GameEngine& engine) : m_engine(engine) {}
 
     template<typename... Ts>
-    void init(Ts&&... args) {};
+    void init(Ts&&... args) {}
     virtual void pause() = 0;
     virtual void shutdown() = 0;
     virtual void handleEvents(sf::Event& event) = 0;

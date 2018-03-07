@@ -26,6 +26,7 @@
 //--------------------------------------------------------------------------
 
 #include "StateMachine.h"
+#include "ResourceManager.h"
 
 //--------------------------------------------------------------------------
 
@@ -37,13 +38,15 @@ public:
     void shutdown();
     int run();
 
+    StateMachine machine;
+    ResourceManager<RESOURCES> resources;
+
 private:
     void init();
     void handleEvents(sf::Event& event);
     void update();
 
     std::unique_ptr<sf::RenderWindow> m_pWindow;
-    StateMachine states;
 
     sf::Clock m_clock;
     bool m_fullscreen = false;

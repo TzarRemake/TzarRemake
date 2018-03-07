@@ -26,13 +26,6 @@
 
 //--------------------------------------------------------------------------
 
-void GameEngine::shutdown()
-{
-    m_pWindow = nullptr;
-}
-
-//--------------------------------------------------------------------------
-
 int GameEngine::run()
 {
     init();
@@ -60,9 +53,16 @@ void GameEngine::init()
 
 //--------------------------------------------------------------------------
 
+void GameEngine::shutdown()
+{
+    m_pWindow = nullptr;
+}
+
+//--------------------------------------------------------------------------
+
 void GameEngine::handleEvents(sf::Event& event)
 {
-    states.handleEvents(event);
+    machine.handleEvents(event);
 
     switch (event.type)
     {
@@ -93,7 +93,7 @@ void GameEngine::handleEvents(sf::Event& event)
 void GameEngine::update()
 {
     auto elapsed = m_clock.restart();
-    states.update(elapsed);
+    machine.update(elapsed);
 
     sf::View view({ 0.f, 0.f, 800.f, 600.f });
     m_pWindow->setView(view);
