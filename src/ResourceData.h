@@ -24,6 +24,11 @@
 
 //--------------------------------------------------------------------------
 
+using ResourceDataDict = std::map<std::string, std::string>;
+using ResourceDataList = std::vector<std::string>;
+
+//--------------------------------------------------------------------------
+
 enum class ResourceType
 {
     DICT,
@@ -42,7 +47,7 @@ struct BaseResourceNode
 struct ResourceNodeDict : public BaseResourceNode
 {
     ResourceNodeDict() { type = ResourceType::DICT; }
-    std::map<std::string, std::string> values;
+    ResourceDataDict values;
 };
 
 //--------------------------------------------------------------------------
@@ -50,7 +55,7 @@ struct ResourceNodeDict : public BaseResourceNode
 struct ResourceNodeList : public BaseResourceNode
 {
     ResourceNodeList() { type = ResourceType::LIST; }
-    std::vector<std::string> values;
+    ResourceDataList values;
 };
 
 //--------------------------------------------------------------------------
@@ -69,16 +74,24 @@ public:
         return pair.second;
     }
 
-    template<typename T>
-    std::shared_ptr<T> get(std::string key)
+    ResourceDataList* list(std::string key)
     {
-        static_assert(std::is_base_of<BaseResourceNode, T>::value, "T must derive from BaseResourceNode");
-
         auto it = m_data.find(key);
-        if (it == m_data.end())
+        if (it == m_data.end() || it->second->type != ResourceType::LIST)
             return nullptr;
 
-        return std::static_pointer_cast<T>(it->second);
+        auto list = std::static_pointer_cast<ResourceNodeList>(it->second);
+        return &list->values;
+    }
+
+    ResourceDataDict* dict(std::string key)
+    {
+        auto it = m_data.find(key);
+        if (it == m_data.end() || it->second->type != ResourceType::DICT)
+            return nullptr;
+
+        auto dict = std::static_pointer_cast<ResourceNodeDict>(it->second);
+        return &dict->values;
     }
 
 private:
