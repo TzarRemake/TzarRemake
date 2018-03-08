@@ -49,12 +49,6 @@ struct StaticHandler
         return index != INVALID;
     }
 
-    inline StaticHandler& operator=(StaticHandler&& rhs) noexcept
-    {
-        index = rhs.index;
-        return *this;
-    }
-
     inline bool operator<(const StaticHandler& rhs) noexcept
     {
         return index < rhs.index;

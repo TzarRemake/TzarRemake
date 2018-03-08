@@ -42,12 +42,14 @@ class ResourceManager
 {
 public:
     template<typename T>
-    ResourceHandler add(std::string&& name, T&& data)
+    ResourceHandler add(std::string name, T& data)
     {
         auto& elements = std::get<std::vector<T>>(m_resources);
         elements.push_back(data);
 
-        ResourceHandler handler = elements.size();
+        ResourceHandler handler;
+        handler.index = elements.size() - 1;
+
         m_handlers.emplace(name, handler);
         return handler;
     }
@@ -60,7 +62,7 @@ public:
     }
 
     template<typename T>
-    ResourceHandler get(std::string&& name)
+    ResourceHandler get(std::string name)
     {
         auto it = m_handlers.find(name);
         if (it != m_handlers.end()) return ResourceHandler::INVALID;

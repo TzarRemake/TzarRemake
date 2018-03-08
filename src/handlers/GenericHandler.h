@@ -53,14 +53,6 @@ struct GenericHandler
         return index != INVALID;
     }
 
-    inline GenericHandler& operator=(GenericHandler&& rhs) noexcept
-    {
-        index = rhs.index;
-        counter = rhs.counter;
-
-        return *this;
-    }
-
     inline bool operator==(GenericHandler&& rhs) noexcept
     {
         return index == rhs.index && counter == rhs.counter;

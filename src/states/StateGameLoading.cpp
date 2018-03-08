@@ -18,7 +18,12 @@
 
 //--------------------------------------------------------------------------
 
+#include <random>
+
+//--------------------------------------------------------------------------
+
 #include "StateGameLoading.h"
+#include "../GameEngine.h"
 
 //--------------------------------------------------------------------------
 
@@ -28,17 +33,22 @@ using namespace state;
 
 void GameLoading::init()
 {
+    auto screens = m_engine.resourceData.get<ResourceNodeList>("loading_screen");
+    auto index = std::rand() % screens->values.size();
+
+    m_screenTex.loadFromFile(screens->values.at(index));
+    m_screenSprite.setTexture(m_screenTex);
 }
 
 //--------------------------------------------------------------------------
 
 void GameLoading::shutdown()
 {
-
 }
 
 //--------------------------------------------------------------------------
 
 void GameLoading::update(sf::Time& delta)
 {
+    m_engine.window()->draw(m_screenSprite);
 }

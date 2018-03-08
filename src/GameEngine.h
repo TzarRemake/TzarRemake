@@ -27,6 +27,7 @@
 
 #include "StateMachine.h"
 #include "ResourceManager.h"
+#include "ResourceData.h"
 
 //--------------------------------------------------------------------------
 
@@ -40,6 +41,7 @@ public:
 
     StateMachine machine;
     ResourceManager<RESOURCES> resources;
+    ResourceData resourceData;
 
 private:
     void init();

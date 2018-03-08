@@ -19,6 +19,7 @@
 #pragma once
 
 #include <memory>
+#include <SFML/Graphics.hpp>
 
 //--------------------------------------------------------------------------
 
@@ -40,6 +41,8 @@ namespace state
 		virtual void update(sf::Time& delta) override;
 
 	private:
+        sf::Texture m_screenTex;
+        sf::Sprite m_screenSprite;
 		sf::Time m_elapsed;
 	};
 }

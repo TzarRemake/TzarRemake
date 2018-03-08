@@ -18,11 +18,13 @@
 
 //--------------------------------------------------------------------------
 
+#include <ctime>
 #include <SFML/OpenGL.hpp>
 
 //--------------------------------------------------------------------------
 
 #include "GameEngine.h"
+#include "states/StateGameLoading.h"
 
 //--------------------------------------------------------------------------
 
@@ -48,7 +50,22 @@ int GameEngine::run()
 
 void GameEngine::init()
 {
+    // Restart seed
+    std::srand(std::time(nullptr));
+
     m_pWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "TzarRemake");
+
+    // Testing resources data
+    std::shared_ptr<ResourceNodeList> pScreens { new ResourceNodeList };
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN1.BMP");
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN2.BMP");
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN3.BMP");
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN4.BMP");
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN5.BMP");
+    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN6.BMP");
+
+    resourceData.insert("loading_screen", pScreens);
+    machine.changeState(std::make_shared<state::GameLoading>(*this));
 }
 
 //--------------------------------------------------------------------------
