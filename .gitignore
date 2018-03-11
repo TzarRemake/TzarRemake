@@ -4,9 +4,6 @@
 # Build directory
 build/
 
-# Resources
-resources/
-
 # CMake files
 CMakeFiles/
 Makefile
