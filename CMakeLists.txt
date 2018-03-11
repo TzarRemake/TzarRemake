@@ -11,11 +11,14 @@ endif()
 project(TzarRemake)
 
 include_directories("${PROJECT_BINARY_DIR}")
+include_directories("lib/")
 
 # Define sources and executable
 file(GLOB SOURCES
   "src/handlers/*.cpp"
   "src/handlers/*.h"
+  "src/resources/*.cpp"
+  "src/resources/*.h"
   "src/states/*.cpp"
   "src/states/*.h"
   "src/*.cpp"

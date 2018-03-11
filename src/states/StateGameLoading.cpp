@@ -33,10 +33,10 @@ using namespace state;
 
 void GameLoading::init()
 {
-    auto screens = m_engine.resourceData.list("loading_screen");
-    auto index = std::rand() % screens->size();
+    auto& screens = m_engine.paths.node("loading_screen").list();
+    auto index = std::rand() % screens.size();
 
-    m_screenTex.loadFromFile(screens->at(index));
+    m_screenTex.loadFromFile(screens.at(index));
     m_screenSprite.setTexture(m_screenTex);
 }
 

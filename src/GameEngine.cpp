@@ -47,7 +47,7 @@ int GameEngine::run()
 }
 
 //--------------------------------------------------------------------------
-
+#include <iostream>
 void GameEngine::init()
 {
     // Restart seed
@@ -56,15 +56,21 @@ void GameEngine::init()
     m_pWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "TzarRemake");
 
     // Testing resources data
-    std::shared_ptr<ResourceNodeList> pScreens { new ResourceNodeList };
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN1.BMP");
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN2.BMP");
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN3.BMP");
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN4.BMP");
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN5.BMP");
-    pScreens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN6.BMP");
+    auto fonts = std::make_shared<PathNodeDict>();
+    fonts->values.emplace("main", std::make_shared<PathNodeValue>("resources/fonts/Tahoma.ttf"));
 
-    resourceData.insert("loading_screen", pScreens);
+    auto screens = std::make_shared<PathNodeList>();
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN1.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN2.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN3.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN4.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN5.BMP");
+    screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN6.BMP");
+
+    paths.insert("fonts", fonts);
+    paths.insert("loading_screen", screens);
+
     machine.changeState(std::make_shared<state::GameLoading>(*this));
 }
 

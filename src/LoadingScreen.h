@@ -18,38 +18,24 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
-#include <utility>
 #include <SFML/Graphics.hpp>
 
 //--------------------------------------------------------------------------
 
-#include "StateMachine.h"
-#include "resources/ResourceManager.h"
-#include "resources/ResourcePaths.h"
-
-//--------------------------------------------------------------------------
-
-class GameEngine final
+class LoadingScreen : public sf::Drawable
 {
 public:
-    inline std::unique_ptr<sf::RenderWindow>& window() { return m_pWindow; }
-
-    void shutdown();
-    int run();
-
-    StateMachine machine;
-    ResourceManager<RESOURCES> resources;
-    ResourcePaths paths;
+    void setTexture(sf::Texture &tex);
+    void setStatus(std::string status);
 
 private:
-    void init();
-    void handleEvents(sf::Event& event);
-    void update();
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    {
+        target.draw(m_background, states);
+        target.draw(m_status, states);
+    }
 
-    std::unique_ptr<sf::RenderWindow> m_pWindow;
-
-    sf::Clock m_clock;
-    bool m_fullscreen = false;
+    sf::Texture m_texture;
+    sf::Sprite m_background;
+    sf::Text m_status;
 };

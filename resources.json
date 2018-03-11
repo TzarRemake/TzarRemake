@@ -1,0 +1,14 @@
+{
+    "font": {
+        "main": "resources/fonts/tahoma.ttf"
+    },
+    "loading_screen": [
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN1.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN2.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN3.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN4.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN5.BMP",
+        "resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN6.BMP",
+    ]
+}
