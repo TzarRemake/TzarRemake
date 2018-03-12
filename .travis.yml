@@ -4,11 +4,11 @@ matrix:
   include:
     - os: linux
       addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-6
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
 
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
@@ -20,7 +20,7 @@ matrix:
         - cd .. && mkdir build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release ..
 
+      script: make
+
       after_script:
         - rm -rf SFML
-
-      script: make
