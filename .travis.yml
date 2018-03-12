@@ -4,16 +4,16 @@ matrix:
   include:
     - os: linux
       addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-6
 
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
-    before_script:
+      before_script:
         - git clone https://github.com/SFML/SFML && cd SFML
         - cmake -DCMAKE_BUILD_TYPE=Release ..
         - export SFML_ROOT=`pwd`
@@ -22,5 +22,5 @@ matrix:
 
       after_script:
         - rm -rf SFML
-        
+
       script: make
