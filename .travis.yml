@@ -28,6 +28,7 @@ matrix:
         - git clone https://github.com/SFML/SFML && cd SFML
         - cmake -DCMAKE_BUILD_TYPE=Release . && make
         - export SFML_ROOT=`pwd`
+        - cd "$TRAVIS_BUILD_DIR"
 
       script:
         - mkdir build && cd build
@@ -35,4 +36,5 @@ matrix:
         - make
 
       after_script:
+        - cd "$TRAVIS_BUILD_DIR"
         - rm -rf SFML
