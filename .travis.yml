@@ -26,15 +26,13 @@ matrix:
       before_script:
         - export CXX=g++-6 && export CC=gcc-6
         - git clone https://github.com/SFML/SFML && cd SFML
-        - cmake -DCMAKE_BUILD_TYPE=Release .
+        - cmake -DCMAKE_BUILD_TYPE=Release . && make
         - export SFML_ROOT=`pwd`
-        - ls lib/
-        - echo "$SFML_ROOT"
-        - cd .. && mkdir build && cd build
-        - echo "$SFML_ROOT"
-        - cmake -DCMAKE_BUILD_TYPE=Release ..
 
-      script: make
+      script:
+        - mkdir build && cd build
+        - cmake -DCMAKE_BUILD_TYPE=Release ..
+        - make
 
       after_script:
         - rm -rf SFML
