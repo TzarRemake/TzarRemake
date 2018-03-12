@@ -1,3 +1,4 @@
+dist: trusty
 language: cpp
 
 matrix:
@@ -9,6 +10,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - gcc-6
             - libgl1-mesa-dev
             - libx11-dev
             - libx11-xcb-dev
@@ -19,11 +21,11 @@ matrix:
             - libfreetype6-dev
             - libopenal-dev
 
-      #env:
-      #  - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+      env:
+        - CC=gcc-6
+        - CXX=g++-6
 
       before_script:
-        - g++-6 --version
         - git clone https://github.com/SFML/SFML && cd SFML
         - cmake -DCMAKE_BUILD_TYPE=Release .
         - export SFML_ROOT=`pwd`
