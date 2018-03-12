@@ -9,13 +9,21 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
+            - libgl1-mesa-dev
+            - libx11-dev
+            - libx11-xcb-dev
+            - libxrandr-dev
+            - libjpeg8-dev
+            - libfreetype6-dev
+            - libopenal-dev
 
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
       before_script:
+        - g++-6 --version
         - git clone https://github.com/SFML/SFML && cd SFML
-        - cmake -DCMAKE_BUILD_TYPE=Release ..
+        - cmake -DCMAKE_BUILD_TYPE=Release .
         - export SFML_ROOT=`pwd`
         - cd .. && mkdir build && cd build
         - cmake -DCMAKE_BUILD_TYPE=Release ..
