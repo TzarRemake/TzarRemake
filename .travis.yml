@@ -12,13 +12,15 @@ matrix:
             - libgl1-mesa-dev
             - libx11-dev
             - libx11-xcb-dev
+            - libudev-dev
+            - libglew-dev
             - libxrandr-dev
             - libjpeg8-dev
             - libfreetype6-dev
             - libopenal-dev
 
-      env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+      #env:
+      #  - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
 
       before_script:
         - g++-6 --version
