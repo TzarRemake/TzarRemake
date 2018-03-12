@@ -22,3 +22,7 @@ cd build
 cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 mingw32-make
 ```
+
+### Why we are doing this?
+Because we can. No seriously we're like to learn new standard of C++ in practice, so why not rewrite our favorite game. Unfortunately, we don't promise that the project will be ever completed.
+
