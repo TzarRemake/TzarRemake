@@ -28,10 +28,9 @@ matrix:
         - git clone https://github.com/SFML/SFML && cd SFML
         - cmake -DCMAKE_BUILD_TYPE=Release .
         - export SFML_ROOT=`pwd`
-        - ls
+        - ls lib/
         - echo "$SFML_ROOT"
         - cd .. && mkdir build && cd build
-        - ls
         - echo "$SFML_ROOT"
         - cmake -DCMAKE_BUILD_TYPE=Release ..
 
