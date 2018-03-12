@@ -20,12 +20,11 @@ matrix:
             - libjpeg8-dev
             - libfreetype6-dev
             - libopenal-dev
-
-      env:
-        - CC=gcc-6
-        - CXX=g++-6
+            - libflac++-dev
 
       before_script:
+        #- ln -s /usr/bin/gcc-6 /usr/local/bin/gcc && ln -s /usr/bin/g++-6 /usr/local/bin/g++
+        - export CXX=g++-6 && export CC=gcc-6
         - git clone https://github.com/SFML/SFML && cd SFML
         - cmake -DCMAKE_BUILD_TYPE=Release .
         - export SFML_ROOT=`pwd`
