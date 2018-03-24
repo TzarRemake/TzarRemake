@@ -47,7 +47,6 @@ public:
 
     Resource get(const K& key)
     {
-        int test = m_resources.size();
         auto it = m_resources.find(key);
         if (it == m_resources.end())
             return nullptr;
