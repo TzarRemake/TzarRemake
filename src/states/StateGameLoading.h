@@ -24,6 +24,7 @@
 //--------------------------------------------------------------------------
 
 #include "GameState.h"
+#include "../LoadingScreen.h"
 
 //--------------------------------------------------------------------------
 
@@ -36,13 +37,12 @@ namespace state
 
 		virtual void init();
         virtual void pause() override {}
-        virtual void handleEvents(sf::Event& event) override {}
+        virtual void handleEvents(sf::Event& event) override;
 		virtual void shutdown() override;
 		virtual void update(sf::Time& delta) override;
 
 	private:
-        sf::Texture m_screenTex;
-        sf::Sprite m_screenSprite;
+        LoadingScreen m_loadingScreen;
 		sf::Time m_elapsed;
 	};
 }

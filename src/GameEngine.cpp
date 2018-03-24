@@ -24,6 +24,7 @@
 //--------------------------------------------------------------------------
 
 #include "GameEngine.h"
+#include "resources/ResourceLoader.h"
 #include "states/StateGameLoading.h"
 
 //--------------------------------------------------------------------------
@@ -43,11 +44,12 @@ int GameEngine::run()
         m_pWindow->display();
     }
 
+    shutdown();
     return 0;
 }
 
 //--------------------------------------------------------------------------
-#include <iostream>
+
 void GameEngine::init()
 {
     // Restart seed
@@ -56,8 +58,8 @@ void GameEngine::init()
     m_pWindow = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "TzarRemake");
 
     // Testing resources data
-    auto fonts = std::make_shared<PathNodeDict>();
-    fonts->values.emplace("main", std::make_shared<PathNodeValue>("resources/fonts/Tahoma.ttf"));
+    auto fontsPaths = std::make_shared<PathNodeDict>();
+    fontsPaths->values.emplace("main", std::make_shared<PathNodeValue>("resources/fonts/Tahoma.ttf"));
 
     auto screens = std::make_shared<PathNodeList>();
     screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN.BMP");
@@ -68,8 +70,19 @@ void GameEngine::init()
     screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN5.BMP");
     screens->values.push_back("resources/IMAGES/IMAGES/SCREENS/WAITSCR/SCREEN6.BMP");
 
-    paths.insert("fonts", fonts);
+    paths.insert("fonts", fontsPaths);
     paths.insert("loading_screen", screens);
+
+    auto& textures = resources.holder<sf::Texture>();
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(0)));
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(1)));
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(2)));
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(3)));
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(4)));
+    textures.load("screen", Resource::loadFromFile<sf::Texture>(screens->values.at(5)));
+
+    auto& fonts = resources.holder<sf::Font>();
+    fonts.load("main", Resource::loadFromFile<sf::Font>(paths.node("fonts").key("main").value()));
 
     machine.changeState(std::make_shared<state::GameLoading>(*this));
 }
@@ -78,6 +91,11 @@ void GameEngine::init()
 
 void GameEngine::shutdown()
 {
+    machine.clear();
+
+    resources.holder<sf::Texture>().clear();
+    resources.holder<sf::Font>().clear();
+
     m_pWindow = nullptr;
 }
 
@@ -100,8 +118,8 @@ void GameEngine::handleEvents(sf::Event& event)
 
     case sf::Event::Resized:
         {
-            sf::FloatRect viewSize(0.f, 0.f, event.size.width, event.size.height);
-            m_pWindow->setView(sf::View(viewSize));
+            sf::FloatRect viewRect(0.f, 0.f, event.size.width, event.size.height);
+            m_view.reset(viewRect);
         }
         break;
 
@@ -118,6 +136,5 @@ void GameEngine::update()
     auto elapsed = m_clock.restart();
     machine.update(elapsed);
 
-    sf::View view({ 0.f, 0.f, 800.f, 600.f });
-    m_pWindow->setView(view);
+    m_pWindow->setView(m_view);
 }

@@ -22,20 +22,27 @@
 
 //--------------------------------------------------------------------------
 
+#include "resources/ResourcePaths.h"
+
+//--------------------------------------------------------------------------
+
 class LoadingScreen : public sf::Drawable
 {
 public:
-    void setTexture(sf::Texture &tex);
+    LoadingScreen();
+
+    void handleEvents(sf::Event& event);
+
+    void setFont(sf::Font& font);
+    void setTexture(sf::Texture& texture);
     void setStatus(std::string status);
 
-private:
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-    {
-        target.draw(m_background, states);
-        target.draw(m_status, states);
-    }
+    const float margins = 10.0f;
 
-    sf::Texture m_texture;
+private:
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
     sf::Sprite m_background;
     sf::Text m_status;
+    sf::View m_textureView;
 };

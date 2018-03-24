@@ -33,11 +33,22 @@ using namespace state;
 
 void GameLoading::init()
 {
-    auto& screens = m_engine.paths.node("loading_screen").list();
-    auto index = std::rand() % screens.size();
+    auto font = m_engine.resources.holder<sf::Font>().get("main");
+    auto textures = m_engine.resources.holder<sf::Texture>().list("screen");
 
-    m_screenTex.loadFromFile(screens.at(index));
-    m_screenSprite.setTexture(m_screenTex);
+    // Get random texture
+    auto texId = rand() % textures.size();
+
+    m_loadingScreen.setFont(*font);
+    m_loadingScreen.setTexture(*textures.at(texId));
+    m_loadingScreen.setStatus("Generating terrain...");
+}
+
+//--------------------------------------------------------------------------
+
+void GameLoading::handleEvents(sf::Event& event)
+{
+    m_loadingScreen.handleEvents(event);
 }
 
 //--------------------------------------------------------------------------
@@ -50,5 +61,5 @@ void GameLoading::shutdown()
 
 void GameLoading::update(sf::Time& delta)
 {
-    m_engine.window()->draw(m_screenSprite);
+    m_engine.window()->draw(m_loadingScreen);
 }

@@ -20,7 +20,19 @@
 
 //--------------------------------------------------------------------------
 
-class ResourceLoader
-{
+#include <memory>
+#include <SFML/Graphics.hpp>
 
-};
+//--------------------------------------------------------------------------
+
+namespace Resource
+{
+    template<typename T>
+    std::unique_ptr<T> loadFromFile(std::string fileName)
+    {
+        auto resource = std::make_unique<T>();
+        resource->loadFromFile(fileName);
+
+        return resource;
+    }
+}

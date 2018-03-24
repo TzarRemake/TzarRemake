@@ -20,58 +20,32 @@
 
 #include <tuple>
 #include <vector>
-#include <map>
+#include <memory>
 
 //--------------------------------------------------------------------------
 
-#include "../handlers/StaticHandler.h"
+#include "ResourceHolder.h"
 
 //--------------------------------------------------------------------------
 
-#define RESOURCES \
+// First value is key
+#define MAIN_RESOURCES \
+    std::string, \
     sf::Texture, \
     sf::Font
 
 //--------------------------------------------------------------------------
 
-using ResourceHandler = StaticHandler<>;
-
-//--------------------------------------------------------------------------
-
-template<class... Ts>
+template<typename K, typename... Ts>
 class ResourceManager
 {
 public:
     template<typename T>
-    ResourceHandler add(std::string name, T& data)
+    inline ResourceHolder<T, K>& holder()
     {
-        auto& elements = std::get<std::vector<T>>(m_resources);
-        elements.push_back(data);
-
-        ResourceHandler handler;
-        handler.index = elements.size() - 1;
-
-        m_handlers.emplace(name, handler);
-        return handler;
-    }
-
-    template<typename T>
-    T* get(ResourceHandler handler)
-    {
-        auto& elements = std::get<std::vector<T>>(m_resources);
-        return handler < elements.size() ? elements.at(handler) : nullptr;
-    }
-
-    template<typename T>
-    ResourceHandler get(std::string name)
-    {
-        auto it = m_handlers.find(name);
-        if (it != m_handlers.end()) return ResourceHandler::INVALID;
-
-        return *it;
+        return std::get<ResourceHolder<T, K>>(m_holders);
     }
 
 private:
-    std::tuple<std::vector<Ts>...> m_resources;
-    std::map<std::string, ResourceHandler> m_handlers;
+    std::tuple<ResourceHolder<Ts>...> m_holders;
 };

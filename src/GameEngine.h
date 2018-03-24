@@ -40,7 +40,7 @@ public:
     int run();
 
     StateMachine machine;
-    ResourceManager<RESOURCES> resources;
+    ResourceManager<MAIN_RESOURCES> resources;
     ResourcePaths paths;
 
 private:
@@ -51,5 +51,6 @@ private:
     std::unique_ptr<sf::RenderWindow> m_pWindow;
 
     sf::Clock m_clock;
+    sf::View m_view = sf::View({ 0.f, 0.f, 800.f, 600.f });
     bool m_fullscreen = false;
 };

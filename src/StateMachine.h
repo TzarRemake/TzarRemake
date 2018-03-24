@@ -67,6 +67,16 @@ public:
         purge();
     }
 
+    void clear()
+    {
+        int size = m_states.size();
+        for (auto &state : m_states)
+            state->shutdown();
+
+        m_states.clear();
+        m_waiting.clear();
+    }
+
 private:
     void purge()
     {
