@@ -18,31 +18,29 @@
 
 #pragma once
 
+#include <memory>
 #include <SFML/Graphics.hpp>
 
 //--------------------------------------------------------------------------
 
-#include "resources/ResourcePaths.h"
+#include "GameState.h"
 
 //--------------------------------------------------------------------------
 
-class LoadingScreen : public sf::Drawable
+namespace state
 {
-public:
-    const float margins = 10.0f;
+    class Gameplay : public GameState
+    {
+    public:
+        Gameplay(GameEngine& engine) : GameState(engine) {}
 
-    LoadingScreen();
+        virtual void init();
+        virtual void pause() override {}
+        virtual void handleEvents(sf::Event& event) override;
+        virtual void shutdown() override;
+        virtual void update(sf::Time& delta) override;
 
-    void handleEvents(sf::Event& event);
-    void updateView(float x, float y);
-    void setFont(const sf::Font& font);
-    void setTexture(const sf::Texture& texture);
-    void setStatus(const std::string& status);
-
-private:
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-    sf::Sprite m_background;
-    sf::Text m_status;
-    sf::View m_textureView;
-};
+    private:
+        sf::Time m_elapsed;
+    };
+}

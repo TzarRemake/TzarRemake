@@ -16,33 +16,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
+//--------------------------------------------------------------------------
 
-#include <SFML/Graphics.hpp>
+#include <random>
 
 //--------------------------------------------------------------------------
 
-#include "resources/ResourcePaths.h"
+#include "../GameEngine.h"
+#include "StateGameplay.h"
 
 //--------------------------------------------------------------------------
 
-class LoadingScreen : public sf::Drawable
+using namespace state;
+
+//--------------------------------------------------------------------------
+
+void Gameplay::init()
 {
-public:
-    const float margins = 10.0f;
+}
 
-    LoadingScreen();
+//--------------------------------------------------------------------------
 
-    void handleEvents(sf::Event& event);
-    void updateView(float x, float y);
-    void setFont(const sf::Font& font);
-    void setTexture(const sf::Texture& texture);
-    void setStatus(const std::string& status);
+void Gameplay::handleEvents(sf::Event& event)
+{
 
-private:
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+}
 
-    sf::Sprite m_background;
-    sf::Text m_status;
-    sf::View m_textureView;
-};
+//--------------------------------------------------------------------------
+
+void Gameplay::shutdown()
+{
+}
+
+//--------------------------------------------------------------------------
+
+void Gameplay::update(sf::Time& delta)
+{
+
+}

@@ -22,8 +22,9 @@
 
 //--------------------------------------------------------------------------
 
-#include "StateGameLoading.h"
 #include "../GameEngine.h"
+#include "StateGameLoading.h"
+#include "StateGameplay.h"
 
 //--------------------------------------------------------------------------
 
@@ -33,14 +34,16 @@ using namespace state;
 
 void GameLoading::init()
 {
-    auto font = m_engine.resources.holder<sf::Font>().get("main");
-    auto textures = m_engine.resources.holder<sf::Texture>().list("screen");
+    auto font = engine.resources.holder<sf::Font>().get("main");
+    auto textures = engine.resources.holder<sf::Texture>().list("screen");
 
     // Get random texture
     auto texId = rand() % textures.size();
+    auto size = engine.window()->getSize();
 
     m_loadingScreen.setFont(*font);
     m_loadingScreen.setTexture(*textures.at(texId));
+    m_loadingScreen.updateView(size.x, size.y);
     m_loadingScreen.setStatus("Generating terrain...");
 }
 
@@ -61,5 +64,6 @@ void GameLoading::shutdown()
 
 void GameLoading::update(sf::Time& delta)
 {
-    m_engine.window()->draw(m_loadingScreen);
+    engine.window()->draw(m_loadingScreen);
+    //engine.machine.changeState(std::make_shared<state::Gameplay>(engine));
 }

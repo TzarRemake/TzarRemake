@@ -36,7 +36,15 @@ LoadingScreen::LoadingScreen()
 void LoadingScreen::handleEvents(sf::Event& event)
 {
     if (event.type == sf::Event::Resized)
-        m_status.setPosition(margins, event.size.height - m_status.getCharacterSize() - margins);
+        updateView(event.size.width, event.size.height);
+}
+
+//--------------------------------------------------------------------------
+
+void LoadingScreen::updateView(float x, float y)
+{
+    // For now that's it
+    m_status.setPosition(margins, y - m_status.getCharacterSize() - margins);
 }
 
 //--------------------------------------------------------------------------
@@ -54,14 +62,14 @@ void LoadingScreen::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 
 //--------------------------------------------------------------------------
 
-void LoadingScreen::setFont(sf::Font& font)
+void LoadingScreen::setFont(const sf::Font& font)
 {
     m_status.setFont(font);
 }
 
 //--------------------------------------------------------------------------
 
-void LoadingScreen::setTexture(sf::Texture& texture)
+void LoadingScreen::setTexture(const sf::Texture &texture)
 {
     auto size = texture.getSize();
 
@@ -71,7 +79,7 @@ void LoadingScreen::setTexture(sf::Texture& texture)
 
 //--------------------------------------------------------------------------
 
-void LoadingScreen::setStatus(std::string status)
+void LoadingScreen::setStatus(const std::string& status)
 {
     m_status.setString(status);
 }

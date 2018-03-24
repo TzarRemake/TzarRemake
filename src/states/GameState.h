@@ -22,8 +22,8 @@
 
 #include <SFML/System.hpp>
 
-//--------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
 
 class GameEngine;
 
@@ -32,13 +32,12 @@ namespace sf
     class Event;
 }
 
-
 //--------------------------------------------------------------------------
 
 class GameState
 {
 public:
-    GameState(GameEngine& engine) : m_engine(engine) {}
+    GameState(GameEngine& _engine) : engine(_engine) {}
 
     template<typename... Ts>
     void init(Ts&&... args) {}
@@ -48,5 +47,5 @@ public:
     virtual void update(sf::Time& delta) = 0;
 
 protected:
-    GameEngine& m_engine;
+    GameEngine& engine;
 };
