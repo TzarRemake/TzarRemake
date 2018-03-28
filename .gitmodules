@@ -1,0 +1,3 @@
+[submodule "lib/fastnoise"]
+	path = lib/fastnoise
+	url = https://github.com/Auburns/FastNoise.git
