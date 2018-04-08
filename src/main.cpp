@@ -21,18 +21,11 @@
 #include "GameEngine.h"
 
 #include "logic/PathingSystem.h"
-#include <iostream>
 
 //--------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
-	Grid grid = Grid(sf::Vector2i(256,256));
-	PathingSystem pathingSystem(&grid);
-	std::cin.get();
-	std::vector<sf::Vector2i> pathVec = pathingSystem.findPath(sf::Vector2i(0, 0), sf::Vector2i(1, 5), PF_ALGORITHM::A_STAR_HEAP);
-	std::cin.get();
-
     GameEngine engine;
     int code = engine.run();
 
