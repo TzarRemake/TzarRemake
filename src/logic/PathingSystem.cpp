@@ -33,6 +33,8 @@ Grid * PathingSystem::CostTile::originGrid = nullptr;
 PathingSystem::PathingSystem(Grid * originGrid) :
 	m_originGrid{originGrid}
 {
+	testVector.reserve(100000000);
+
 	m_gridSize = originGrid->getGridSize();
 	m_chunkGridSize = originGrid->getChunkGridSize();
 	m_chunkSizeN = originGrid->getChunkSizeN();
@@ -96,6 +98,8 @@ PathingSystem::~PathingSystem()
 
 std::vector<sf::Vector2i> PathingSystem::findPath(sf::Vector2i startPos, sf::Vector2i targetPos, PF_ALGORITHM algorithm)
 {
+	//return std::move(testVector);
+	return std::move(testVector);
 	// check if target tile is not stationary occupied
 	sf::Vector2i startPosition = startPos;
 	sf::Vector2i targetPosition = targetPos;

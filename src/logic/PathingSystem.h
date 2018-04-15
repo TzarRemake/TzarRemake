@@ -183,6 +183,9 @@ private:
 	std::unique_ptr<BinaryHeapTiles<CostTile*>> m_openSet2;				///< open set for cost tiles stored on binary heap allocator used for bidirectional algorithm
 	std::unique_ptr<CloseSet<CostTile*>> m_closeSet2;					///< close set for cost tiles used for bidirectional algorithm
 
-	std::unique_ptr<HeapArray<CostTile*>> m_neighbours;					///< vector of all neighbours 
+	std::unique_ptr<HeapArray<CostTile*>> m_neighbours;					///< vector of all neighbours
+
+
+	std::vector<sf::Vector2i> testVector;	//--
 };
 

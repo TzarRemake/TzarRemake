@@ -16,26 +16,45 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+//--------------------------------------------------------------------------
+
+#include "EditBox.h"
 
 //--------------------------------------------------------------------------
 
-#include <iostream>
-
-//--------------------------------------------------------------------------
-
-constexpr unsigned int WIN_WIDTH = 800;
-constexpr unsigned int WIN_HEIGHT = 600;
-constexpr unsigned int CHUNK_SIZE = 8;
-constexpr unsigned int GRID_SIZE = 256;
-
-//--------------------------------------------------------------------------
-
-/*!
-* \brief Function which exit program after user press enter in console
-*/
-class Functions
+namespace gui
 {
-public:
-	static void exitCin(unsigned int exitReturn);
-};
+
+	EditBox::EditBox()
+	{
+		std::cout << "EditBox constructor working" << std::endl;
+	}
+
+	//--------------------------------------------------------------------------
+
+	EditBox::~EditBox()
+	{
+		std::cout << "EditBox destructor working" << std::endl;
+	}
+
+	//--------------------------------------------------------------------------
+
+	void EditBox::handleEvents(Event::EventType event)
+	{
+
+	}
+
+	//--------------------------------------------------------------------------
+
+	void EditBox::update()
+	{
+
+	}
+
+	//--------------------------------------------------------------------------
+
+	sf::Vector2f EditBox::getLocalCenter() const
+	{
+		return sf::Vector2f(0,0);
+	}
+}

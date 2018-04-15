@@ -16,26 +16,18 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#pragma once
+//--------------------------------------------------------------------------
+
+#include "defines.h"
 
 //--------------------------------------------------------------------------
 
-#include <iostream>
 
-//--------------------------------------------------------------------------
-
-constexpr unsigned int WIN_WIDTH = 800;
-constexpr unsigned int WIN_HEIGHT = 600;
-constexpr unsigned int CHUNK_SIZE = 8;
-constexpr unsigned int GRID_SIZE = 256;
-
-//--------------------------------------------------------------------------
-
-/*!
-* \brief Function which exit program after user press enter in console
-*/
-class Functions
+void Functions::exitCin(unsigned int exitReturn)
 {
-public:
-	static void exitCin(unsigned int exitReturn);
-};
+	auto func = atexit([]() {
+		std::cout << "Press enter to terminate program... " << std::endl;
+		std::cin.get();
+	});
+	exit(exitReturn);
+}

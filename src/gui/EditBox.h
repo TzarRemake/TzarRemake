@@ -20,22 +20,38 @@
 
 //--------------------------------------------------------------------------
 
-#include <iostream>
+#include "Widget.h"
 
 //--------------------------------------------------------------------------
 
-constexpr unsigned int WIN_WIDTH = 800;
-constexpr unsigned int WIN_HEIGHT = 600;
-constexpr unsigned int CHUNK_SIZE = 8;
-constexpr unsigned int GRID_SIZE = 256;
-
-//--------------------------------------------------------------------------
-
-/*!
-* \brief Function which exit program after user press enter in console
-*/
-class Functions
+namespace gui
 {
-public:
-	static void exitCin(unsigned int exitReturn);
-};
+	/*!
+	 * \brief EditBox GUI class
+	 */
+	class EditBox : public Widget
+	{
+	public:
+		EditBox();
+		~EditBox();
+		EditBox(const EditBox & obj);
+		EditBox(EditBox && obj);
+		EditBox & operator=(EditBox & obj);
+		EditBox & operator=(EditBox && obj);
+
+
+		virtual void handleEvents(Event::EventType event) override;
+		virtual void update() override;
+		/*!
+		* \brief Get center of widget in local coordinate system
+		*/
+		virtual sf::Vector2f getLocalCenter() const override;
+
+	private:
+	    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
+	    {
+
+	    }
+
+	};
+}

@@ -20,22 +20,44 @@
 
 //--------------------------------------------------------------------------
 
-#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 //--------------------------------------------------------------------------
 
-constexpr unsigned int WIN_WIDTH = 800;
-constexpr unsigned int WIN_HEIGHT = 600;
-constexpr unsigned int CHUNK_SIZE = 8;
-constexpr unsigned int GRID_SIZE = 256;
+#include "Widget.h"
 
 //--------------------------------------------------------------------------
 
-/*!
-* \brief Function which exit program after user press enter in console
-*/
-class Functions
+namespace gui
 {
-public:
-	static void exitCin(unsigned int exitReturn);
-};
+	/*!
+	* \brief Type of text aligning
+	*/
+	enum class TextAligning
+	{
+		CENTER,	///< position text in center of widget
+	};
+
+	//--------------------------------------------------------------------------
+
+	/*!
+	* \brief This is wrapper class around text to use with widgets
+	*/
+	class Text : public sf::Text
+	{
+	public:
+		Text(Widget * const widget, TextAligning textAligning);
+		~Text() = default;
+		
+		/*!
+		* \brief align text with widget boundary
+		*/
+		void align();
+
+	private:
+		Widget * m_widget;				///< Pointer to widget
+		TextAligning m_textAligning;	///< Type of text aligning
+		sf::Vector2f m_offset;			///< Offset position of text
+	};
+}

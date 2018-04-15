@@ -25,6 +25,7 @@
 #include "../GameEngine.h"
 #include "StateGameLoading.h"
 #include "StateGameplay.h"
+#include "StateMenu.h"
 
 //--------------------------------------------------------------------------
 
@@ -65,5 +66,6 @@ void GameLoading::shutdown()
 void GameLoading::update(sf::Time& delta)
 {
     engine.window()->draw(m_loadingScreen);
-    //engine.machine.changeState(std::make_shared<state::Gameplay>(engine));
+	// !! skip to menu asap for debug !!
+    engine.machine.changeState(std::make_shared<state::Menu>(engine));
 }
