@@ -41,16 +41,24 @@ namespace gui
 		 *
 		 */
 		Button(sf::Vector2f size, const sf::Color & normColor = sf::Color(0,0,0));
-		~Button();
+		virtual ~Button();
 		Button(const Button & obj);
 		Button(Button && obj);
 		Button & operator=(Button & obj);
 		Button & operator=(Button && obj);
 
+		//--------------------------------------------------------------------------
+
+		virtual void handleEvents(Event::EventType event) override;
+
+		virtual void update() override;
+
 		/*!
 		* \brief Get center of widget in local coordinate system
 		*/
 		virtual sf::Vector2f getLocalCenter() const override;
+
+		//--------------------------------------------------------------------------
 
 		/*!
 		* \brief Get local bounds of this button
@@ -89,10 +97,6 @@ namespace gui
 			m_callback = std::move(fun);
 		}
 
-
-		virtual void handleEvents(Event::EventType event) override;
-		virtual void update() override;
-
 		/*!
 		* \brief Set color of button
 		*
@@ -112,24 +116,25 @@ namespace gui
 		/*!
 		* \brief Sets resources for widget
 		*
-		* \brief font Pointer to font resource in memory
 		* \brief texture Pointer to texture resource in memory
 		*
 		*/
-		void setResources(sf::Font * font, sf::Texture * texture = nullptr, const sf::Rect<int> & rect = sf::Rect<int>());
+		void setResources(sf::Texture * texture = nullptr, const sf::Rect<int> & rect = sf::Rect<int>());
 
 		/*!
 		* \brief Initialize text
 		*
 		* \param str Text on the button
+		* \param font Font used for text class
 		* \param textAlining Style of text aligning to button widget
+		* \param offset Offset position after aligning
 		* \param charSize Size of text characters
 		* \param style Style of text characters
 		* \param color Color of text characters
 		*
 		*/
-		void initText(const std::string & str, TextAligning textAlining,
-			unsigned charSize = 30, sf::Text::Style style = sf::Text::Bold, sf::Color color = sf::Color(255,255,255));
+		void initText(const std::string & str, const sf::Font & font, TextAligning textAlining,
+			const sf::Vector2f & offset = sf::Vector2f(0.f,0.f), unsigned charSize = 30, sf::Text::Style style = sf::Text::Bold, sf::Color color = sf::Color(255,255,255));
 
 
 		void setTextColorHoverable(bool isHoverable, sf::Color color)

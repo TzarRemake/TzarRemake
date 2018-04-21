@@ -28,7 +28,7 @@
 #include "Button.h"
 #include "Container.h"
 #include "EditBox.h"
-#include "ResourceManager.h"
+#include "../resources/ResourceManager.h"
 
 //--------------------------------------------------------------------------
 
@@ -45,6 +45,17 @@ namespace gui
 	enum class GuiType
 	{
 		MAIN_MENU, ///< gui inside main menu
+	};
+
+	//--------------------------------------------------------------------------
+
+	/*!
+	* \brief Submenu id
+	*/
+	enum MenuID
+	{
+		MAIN_MENU = 0,
+		SINGLE_PLAYER,
 	};
 
 	//--------------------------------------------------------------------------
@@ -99,6 +110,11 @@ namespace gui
 		 */
 		void handleEvent(sf::Event & event);
 
+		/*!
+		* \brief This function change actually managed and drawed container to new one choosen in handleEvent phase
+		*/
+		void updateContainer();
+
         /*!
          * \brief Load texture into texture holder
          *
@@ -110,11 +126,11 @@ namespace gui
          * \return Return true if texture was succesfully loadedk, otherwise return false
          *
          */
-        bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0,0,0));
+		//bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0,0,0));
 
-		TextureHolder & getTextureHolder() { return m_textureHolder; }
-		FontHolder & getFontHolder() { return m_fontHolder; }
-		ShaderHolder & getShaderHolder() { return m_shaderHolder; }
+		//TextureHolder & getTextureHolder() { return m_textureHolder; }
+		//FontHolder & getFontHolder() { return m_fontHolder; }
+		//ShaderHolder & getShaderHolder() { return m_shaderHolder; }
 
 	private:
 		GameEngine * m_engine;				///< Pointer to program engine which initialized this GUI object
@@ -122,17 +138,18 @@ namespace gui
 
 		std::vector<gui::Container> m_containers;	///< Main gui vector of containers objects which hold all other widgets
 		std::vector<gui::Container>::iterator m_container;	///< Iterator to actuallly used gui container
-		unsigned int m_containerID{0};		///< Index of actually used container
+		volatile int m_containerID{-1};				///< Index of container which will be used in next
 
-		TextureHolder m_textureHolder;	///< Holds all textures
-		FontHolder m_fontHolder;		///< Holds all textures
-		ShaderHolder m_shaderHolder;	///< Holds all textures
+		//TextureHolder m_textureHolder;	///< Holds all textures
+		//FontHolder m_fontHolder;		///< Holds all textures
+		//ShaderHolder m_shaderHolder;	///< Holds all textures
+		ResourceManager<MAIN_RESOURCES> resources;
 	};
 }
 
 /*!
  * \class gui::ProgramGUI
  *
- * gui::ProgramGUI gather all GUI objects which are used to communicate with user.
+ * gui::ProgramGUI Gather all GUI objects which are used to communicate with user.
  *
  */

@@ -36,7 +36,6 @@ namespace gui
 		// initialize local bounding rect
 		m_floatRect = sf::Rect<float>(0, 0, size.x, size.y);
 
-		m_text = std::make_unique<Text>(this, TextAligning::CENTER);
 		std::cout << "Button constructor working" << std::endl;
 	}
 
@@ -181,9 +180,8 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void Button::setResources(sf::Font * font , sf::Texture * texture, const sf::Rect<int> & rect)
+	void Button::setResources(sf::Texture * texture, const sf::Rect<int> & rect)
 	{
-		m_text->setFont(*font);
 		m_normTexture = texture;
 		m_texture = texture;
 		m_normTextureRect = rect;
@@ -192,9 +190,10 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void Button::initText(const std::string & str, TextAligning textAlining,
-		unsigned charSize, sf::Text::Style style, sf::Color color)
+	void Button::initText(const std::string & str, const sf::Font & font, TextAligning textAlining, 
+		const sf::Vector2f & offset, unsigned charSize, sf::Text::Style style, sf::Color color)
 	{
+		m_text = std::make_unique<Text>(this, font, textAlining, offset);
 		m_textNormColor = color;
 		m_text->setString(str);
 		m_text->setCharacterSize(charSize);

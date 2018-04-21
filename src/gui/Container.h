@@ -47,15 +47,7 @@ namespace gui
 		~Container();
 		Container(Container && obj);
 
-		/*!
-		* \brief Initialize container
-		*
-		* This function validate iterators and should be called whenever vector of widgets reallocation takes place.
-		*
-		*/
-		void init();
-
-		void handleEvents(sf::Event& event);
+		//--------------------------------------------------------------------------
 
 		virtual void handleEvents(Event::EventType event) override;
 
@@ -65,6 +57,18 @@ namespace gui
 		* \brief Get center of widget in local coordinate system
 		*/
 		virtual sf::Vector2f getLocalCenter() const override;
+
+		//--------------------------------------------------------------------------
+
+		/*!
+		* \brief Initialize container
+		*
+		* This function validate iterators and should be called whenever vector of widgets reallocation takes place.
+		*
+		*/
+		void init();
+
+		void handleEvents(sf::Event& event);
 
 		/*!
 		* \brief Get iterator to widget
@@ -91,8 +95,20 @@ namespace gui
 				m_boundary.left = bounds.left;
 			if (bounds.top < m_boundary.top)
 				m_boundary.top = bounds.top;
-
-			m_boundaries.push_back(static_cast<sf::Rect<int>>(bounds));
+			
+			switch (m_mhType)
+			{
+				case MouseHandlingType::SEARCH_BOUNDARY:
+				{
+					m_boundaries.push_back(static_cast<sf::Rect<int>>(bounds));
+					break;
+				}
+				case MouseHandlingType::SEARCH_MATRIX:
+				{
+					m_inputMatrix->setValue(bounds.left, bounds.top, bounds.width, bounds.height, m_Children.size());
+					break;
+				}
+			}
 
 			// check if new widget boundaries exceed global menu boundaries
 			if ((bounds.left + bounds.width) > (m_boundary.left + m_boundary.width))
@@ -121,12 +137,16 @@ namespace gui
 	    	}
 	    }
 
-		MouseHandlingType m_mhType;
+		MouseHandlingType m_mhType;											///< Algorithm used when handling mouse events
 		sf::Sprite m_background;											///< Background sprite
 	    std::vector<std::unique_ptr<gui::Widget>> m_Children;				///< Storage for all widgets
 
 		std::vector<sf::Rect<int>> m_boundaries;							///< Rectangle boundaries for all widgets
 		sf::Rect<int> m_boundary{sf::Rect<int>(WIN_WIDTH,WIN_HEIGHT,0,0)};	///< Rectangle boundary for menu
+
+		std::unique_ptr<mat::Matrix<int>> m_inputMatrix;					///< matrix which holds information about indexes of widgets in all window pixels
+		static constexpr int tab_i_default = -1;							///< default value for m_inputMatrix for places without any widget
+		//static int tab_i;
 
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_hoveredWidget; ///< iterator to actually hovered Widget
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_clickedWidget; ///< iterator to actually clicked Widget

@@ -36,8 +36,6 @@ int GameEngine::run()
     while (m_pWindow->isOpen())
     {
         sf::Event event;
-		//m_pWindow.get()->pollEvent(event);
-		//m_pWindow->pollEvent(event);
         while (m_pWindow->pollEvent(event))
             handleEvents(event);
 

@@ -22,11 +22,13 @@
 
 #include "GameState.h"
 #include "../gui/ProgramGUI.h"
+#include "../tester/timer.h"
 
 //--------------------------------------------------------------------------
 
 namespace state
 {
+
 	class Menu : public GameState
 	{
 	public:
@@ -49,10 +51,10 @@ namespace state
 		* \return Return true if texture was succesfully loadedk, otherwise return false
 		*
 		*/
-		bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0, 0, 0));
+		//bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0, 0, 0));
 
 	private:
 		std::unique_ptr<gui::ProgramGUI> m_guiObject;	///< gui for menu
-		TextureHolder m_textureHolder;					///< texture holder
+		//TextureHolder m_textureHolder;					///< texture holder
 	};
 }

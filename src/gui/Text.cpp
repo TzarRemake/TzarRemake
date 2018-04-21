@@ -24,9 +24,11 @@
 
 namespace gui
 {
-	Text::Text(Widget * const widget, TextAligning textAligning) :
-		m_widget{ widget }, m_textAligning{ textAligning }
+	Text::Text(Widget * const widget, const sf::Font & font,
+		TextAligning textAligning, const sf::Vector2f & offset) :
+		m_widget{ widget }, m_textAligning{ textAligning }, m_offset{offset}
 	{
+		setFont(font);
 	}
 	
 	//--------------------------------------------------------------------------

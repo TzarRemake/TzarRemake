@@ -34,6 +34,12 @@ namespace gui
 			{
 				break;
 			}
+			case MouseHandlingType::SEARCH_MATRIX:
+			{
+				static_assert(tab_i_default == -1, "Default value for tab container should be -1");
+				m_inputMatrix = std::make_unique<mat::Matrix<int>>(WIN_WIDTH, WIN_HEIGHT, tab_i_default);
+				break;
+			}
 			default:
 			{
 				Functions::exitCin(EXIT_FAILURE);
@@ -57,6 +63,7 @@ namespace gui
 		m_boundary = obj.m_boundary;
 		m_Children = std::move(obj.m_Children);
 		m_boundaries = std::move(obj.m_boundaries);
+		m_inputMatrix = std::move(obj.m_inputMatrix);
 		m_mhType = obj.m_mhType;
 	}
 
@@ -86,19 +93,18 @@ namespace gui
 				case sf::Event::MouseMoved:
 				{
 					auto it = getWidget(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)); // get widget under mouse position
-					if (m_hoveredWidget != m_Children.end())
+					if (it != m_hoveredWidget)
 					{
-						if (it != m_hoveredWidget)
+						if (m_hoveredWidget != m_Children.end())
 						{
 							m_hoveredWidget->get()->handleEvents(Event::EventType::stopHover);
 							m_hoveredWidget = m_Children.end();
 						}
-					}
-
-					if (it != m_Children.end())
-					{
-						it->get()->handleEvents(Event::EventType::startHover);
-						m_hoveredWidget = it;
+						if (it != m_Children.end())
+						{
+							it->get()->handleEvents(Event::EventType::startHover);
+							m_hoveredWidget = it;
+						}
 					}
 					break;
 				}
@@ -167,6 +173,26 @@ namespace gui
 						}
 						++index;
 					}
+				}
+				break;
+			}
+			case MouseHandlingType::SEARCH_MATRIX:
+			{
+				if (m_boundary.contains(position))
+				{
+					try
+					{
+						int widgetIdx = m_inputMatrix->getValue(position.x, position.y);
+						if (widgetIdx != tab_i_default)
+						{
+							return m_Children.begin() + widgetIdx;
+						}
+					}
+					catch (std::out_of_range e)
+					{
+						std::cout << "Container::getWidget(sf::Vector2i position): " << e.what() << std::endl;
+					}
+					
 				}
 				break;
 			}

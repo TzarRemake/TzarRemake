@@ -44,6 +44,7 @@ namespace gui
 	enum class MouseHandlingType
 	{
 		SEARCH_BOUNDARY,	///< indicates that gui will search for objects looking at their boundaries
+		SEARCH_MATRIX,		///< indicates that gui will search for objects looking at static matrix
 	};
 
 	//--------------------------------------------------------------------------
@@ -68,6 +69,8 @@ namespace gui
 		Widget & operator=(Widget & obj);
 		Widget & operator=(Widget && obj);
 
+		//--------------------------------------------------------------------------
+
 		/*!
 		* \brief Handle event function which occur whenever some event happen over specified widget
 		*/
@@ -79,6 +82,8 @@ namespace gui
 		* \brief Get center of widget in local coordinate system
 		*/
 		virtual sf::Vector2f getLocalCenter() const = 0;
+
+		//--------------------------------------------------------------------------
 
 		/*!
 		 * \brief Setters and getters

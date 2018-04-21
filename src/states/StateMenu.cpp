@@ -29,6 +29,8 @@ namespace state
 	{
 		// create GUI
 		m_guiObject = std::make_unique<gui::ProgramGUI>(this, &engine, gui::GuiType::MAIN_MENU, gui::MouseHandlingType::SEARCH_BOUNDARY);
+		auto font = engine.resources.holder<sf::Font>().get("main");
+		tst::Timer<tst::TimerID::StateMenu>::init(*font);
 	}
 
 	//--------------------------------------------------------------------------
@@ -54,41 +56,11 @@ namespace state
 		//{
 		//	m_guiObject->handleEvent(event);
 		//}
-
+		m_guiObject->updateContainer();
 		m_guiObject->draw(*engine.window());
-	}
 
-	//--------------------------------------------------------------------------
-
-	bool Menu::loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska, sf::Color alphaMask)
-	{
-		try
-		{
-			std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
-
-			// load texture into textureHolder
-			if (isAlphaMaska == false)
-			{
-				m_textureHolder.load(texID, strTex);
-			}
-			// load texture into textureHolder with mask
-			else
-			{
-				sf::Image image;
-				if (!image.loadFromFile(strTex))
-					throw std::runtime_error("Menu::loadTexture() - Failed to load "
-						+ strTex);
-				image.createMaskFromColor(alphaMask);
-				if (!texture->loadFromImage(image))
-					throw std::runtime_error("Menu::loadTexture() - Failed to load "
-						+ strTex);
-				m_textureHolder.add(texID, std::move(texture));
-			}
-		}
-		catch (...)
-		{
-			return false;
-		}
-		return true;
+		//--
+		tst::Timer<tst::TimerID::StateMenu> timer = tst::Timer<tst::TimerID::StateMenu>(engine.window().get());
+		//--
 	}
 }

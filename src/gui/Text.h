@@ -47,7 +47,7 @@ namespace gui
 	class Text : public sf::Text
 	{
 	public:
-		Text(Widget * const widget, TextAligning textAligning);
+		Text(Widget * const widget, const sf::Font & font, TextAligning textAligning, const sf::Vector2f & offset = sf::Vector2f(0.f,0.f));
 		~Text() = default;
 		
 		/*!
