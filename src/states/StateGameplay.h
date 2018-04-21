@@ -34,7 +34,7 @@ namespace state
     public:
         Gameplay(GameEngine& engine) : GameState(engine) {}
 
-		void init();
+        virtual void init();
         virtual void pause() override {}
         virtual void handleEvents(sf::Event& event) override;
         virtual void shutdown() override;
