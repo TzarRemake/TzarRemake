@@ -40,7 +40,7 @@ namespace gui
 		 * \param normColor Standard color of button
 		 *
 		 */
-		Button(sf::Vector2f size, const sf::Color & normColor = sf::Color(0,0,0));
+		Button(sf::Vector2f size, sf::Color normColor = sf::Color(0,0,0));
 		virtual ~Button();
 		Button(const Button & obj);
 		Button(Button && obj);

@@ -21,6 +21,12 @@ file(GLOB SOURCES
   "src/resources/*.h"
   "src/states/*.cpp"
   "src/states/*.h"
+   "src/logic/*.cpp"
+  "src/logic/*.h"
+  "src/gui/*.cpp"
+  "src/gui/*.h"
+  "src/tester/*.cpp"
+  "src/tester/*.h"
   "src/*.cpp"
   "src/*.h"
 )

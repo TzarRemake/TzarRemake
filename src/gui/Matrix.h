@@ -43,7 +43,7 @@ namespace mat
 		 *
 		 */
 		Matrix(int width, int height, T initializer = T()):
-			m_width(width), m_height(height), default{initializer}
+			m_width(width), m_height(height)
 		{
 			assert(width > 0 && height > 0); // width and height of matrix should be positive values
 			int size = width*height;
@@ -131,7 +131,7 @@ namespace mat
 
 	private:
 		std::vector<T> m_inputs;		///< vector of all nodes inside matrix
-		const T default;				///< default value which is assigned to matrix at constructino time
+		//const T default;				///< default value which is assigned to matrix at constructino time
 		const int m_width, m_height;	///< size of the matrix
 	};
 }

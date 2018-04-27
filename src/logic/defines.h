@@ -38,4 +38,5 @@ class Functions
 {
 public:
 	static void exitCin(unsigned int exitReturn);
+	static void throwInvalidArgument(std::string && str);
 };

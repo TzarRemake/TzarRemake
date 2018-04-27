@@ -50,17 +50,6 @@ namespace gui
 	//--------------------------------------------------------------------------
 
 	/*!
-	* \brief Submenu id
-	*/
-	enum MenuID
-	{
-		MAIN_MENU = 0,
-		SINGLE_PLAYER,
-	};
-
-	//--------------------------------------------------------------------------
-
-	/*!
 	 * \brief Class holding GUI
 	 */
 	class ProgramGUI
@@ -111,8 +100,13 @@ namespace gui
 		void handleEvent(sf::Event & event);
 
 		/*!
-		* \brief This function change actually managed and drawed container to new one choosen in handleEvent phase
+		* \brief Change actually managed and drawed container to new one choosen in handleEvent phase
+		*
+		* This function should be used in every program iteration to ensure that changes to actually used
+		* container submenu are submitted.
+		*
 		*/
+		[[deprecated("Using of this function is no longer needed and need appropriate handle of volatile variable m_containerID")]]
 		void updateContainer();
 
         /*!
@@ -128,22 +122,17 @@ namespace gui
          */
 		//bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0,0,0));
 
-		//TextureHolder & getTextureHolder() { return m_textureHolder; }
-		//FontHolder & getFontHolder() { return m_fontHolder; }
-		//ShaderHolder & getShaderHolder() { return m_shaderHolder; }
 
 	private:
 		GameEngine * m_engine;				///< Pointer to program engine which initialized this GUI object
 		GameState * m_state;				///< Pointer to program state which initialized this GUI object
 
-		std::vector<gui::Container> m_containers;	///< Main gui vector of containers objects which hold all other widgets
+		std::vector<gui::Container> m_containers;			///< Main gui vector of containers objects which hold all other widgets
 		std::vector<gui::Container>::iterator m_container;	///< Iterator to actuallly used gui container
-		volatile int m_containerID{-1};				///< Index of container which will be used in next
+		//[[deprecated("This volatile variable may not be used if deprecated function void updateContainer() is not used as well")]]
+		volatile int m_containerID{-1};						///< Index of container which will be used in next program iteration
 
-		//TextureHolder m_textureHolder;	///< Holds all textures
-		//FontHolder m_fontHolder;		///< Holds all textures
-		//ShaderHolder m_shaderHolder;	///< Holds all textures
-		ResourceManager<MAIN_RESOURCES> resources;
+		ResourceManager<MAIN_RESOURCES> resources;	///< Recources manager (fonts, textures, etc..)
 	};
 }
 

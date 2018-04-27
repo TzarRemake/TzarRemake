@@ -54,9 +54,9 @@ namespace gui
 					public sf::NonCopyable
 	{
 	public:
-		Widget():
+		Widget(sf::Color normColor):
 			m_normTexture{nullptr}, m_hoverTexture{nullptr}, m_clickedTexture{nullptr},
-			m_normColor{0,0,0}, m_hoverColor{0,0,0}, m_clickedColor{0,0,0}
+			m_normColor{ normColor }, m_hoverColor{0,0,0}, m_clickedColor{0,0,0}
 		{
 			std::cout << "Widget constructor working" << std::endl;
 		}
@@ -64,10 +64,10 @@ namespace gui
 		{
 			std::cout << "Widget destructor working" << std::endl;
 		}
-		Widget(const Widget & obj);
-		Widget(Widget && obj);
-		Widget & operator=(Widget & obj);
-		Widget & operator=(Widget && obj);
+		Widget(const Widget & obj) = delete;
+		Widget(Widget && obj) = delete;
+		Widget & operator=(Widget & obj) = delete;
+		Widget & operator=(Widget && obj) = delete;
 
 		//--------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ namespace gui
 		*/
 		virtual void handleEvents(Event::EventType event) = 0;
 
-		virtual void update() = 0; ///< ???
+		virtual void update() {} ///< ??? not sure if this will be used in any way
 
 		/*!
 		* \brief Get center of widget in local coordinate system
@@ -200,10 +200,6 @@ namespace gui
 		}
 
 	private:
-		/*!
-		* \brief State if widget change something when clicked left mouse button, but without release
-		*/
-		void setIsClickable(bool isClickable) { m_isClickable = isClickable; }
 
 		/*!
 		* \brief State if widget change something when hovered
@@ -216,9 +212,13 @@ namespace gui
 		void setIsVisible(bool isVisible) { m_isVisible = isVisible; }
 
 	protected:
+		/*!
+		* \brief State if widget change something when clicked left mouse button, but without release
+		*/
+		void setIsClickable(bool isClickable) { m_isClickable = isClickable; }
+
 		void setIsHovered(bool isHovered) { m_isHovered = isHovered; }
 		void setIsClicked(bool isClicked) { m_isClicked = isClicked; }
-
 		/*!
 		* \brief Set texture rect
 		*

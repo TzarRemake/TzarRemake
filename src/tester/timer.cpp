@@ -18,21 +18,13 @@
 
 //--------------------------------------------------------------------------
 
-#include "defines.h"
+#include "timer.h"
 
 //--------------------------------------------------------------------------
 
-
-void Functions::exitCin(unsigned int exitReturn)
+namespace tst
 {
-	auto func = atexit([]() {
-		std::cout << "Press enter to terminate program... " << std::endl;
-		std::cin.get();
-	});
-	exit(exitReturn);
-}
+	std::chrono::time_point<std::chrono::high_resolution_clock> FunctionTimer::start = std::chrono::high_resolution_clock::now();
 
-void Functions::throwInvalidArgument(std::string && str)
-{
-	throw std::invalid_argument(str);
+	std::chrono::time_point<std::chrono::high_resolution_clock> FunctionTimer::end = std::chrono::high_resolution_clock::now();
 }

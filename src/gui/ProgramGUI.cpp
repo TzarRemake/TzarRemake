@@ -18,6 +18,7 @@
 
 //--------------------------------------------------------------------------
 
+#include "../states/StateMenu.h"
 #include "ProgramGUI.h"
 #include "../GameEngine.h"
 #include "../resources/ResourceLoader.h"
@@ -40,6 +41,7 @@ namespace gui
 				auto& textures = resources.holder<sf::Texture>();
 				std::string texture0_str{ "./resources/IMAGES/IMAGES/SCREENS/S_MAIN/BACK.bmp" };
 				std::string texture1_str{ "./resources/IMAGES/IMAGES/SCREENS/S_MAIN/BTN.bmp" };
+				textures.load("BLACK_MENU_BACK", Resource::loadFromFile<sf::Texture>("./resources/IMAGES/MENU/BLACK_BACK.bmp"));
 				textures.load("MAIN_MENU_BACK", Resource::loadFromFile<sf::Texture>(texture0_str));
 				textures.load("MAIN_MENU_BTN", Resource::loadFromFile<sf::Texture>(texture1_str));
 				textures.load("S_SINGLEPLAYER_BACK", Resource::loadFromFile<sf::Texture>("./resources/IMAGES/IMAGES/SCREENS/S_SINGLEPLAYER/BACK.bmp"));
@@ -56,7 +58,23 @@ namespace gui
 				m_containers.push_back(gui::Container(mhType));
 
 				// set background initial sprite
-				m_containers.back().setBackground(*resources.holder<sf::Texture>().get("MAIN_MENU_BACK"));
+				m_containers.back().setBackground(*resources.holder<sf::Texture>().get("MAIN_MENU_BACK"), sf::Color(255, 255, 255));
+
+				// button_Multiplayer
+				auto button_2 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
+				button_2->setPosition(sf::Vector2f(270.f, 277.f + 60.f)); // declaring position of button in local gui coordinates bounded to window coordinate system
+				button_2->initText("Multiplayer", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
+				button_2->setResources(resources.holder<sf::Texture>().get("MAIN_MENU_BTN").get(), sf::Rect<int>(0, 0, 235, 25));
+				button_2->setIsTextureClickable(true, resources.holder<sf::Texture>().get("MAIN_MENU_BTN").get(), sf::Rect<int>(236, 0, 235, 25));
+				button_2->setTextColorHoverable(true, sf::Color(255, 255, 55));
+				button_2->setCallBack([this]() {
+					std::cout << "Button callback function change to Multiplayer: " << std::endl;
+
+					m_containerID = state::MULTI_PLAYER;
+
+					m_container = m_containers.begin() + state::MULTI_PLAYER;
+				});
+				m_containers.back().attachObject(std::move(button_2));
 
 				// button_SinglePlayer
 				auto button_1 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
@@ -67,23 +85,14 @@ namespace gui
 				button_1->setTextColorHoverable(true, sf::Color(255,255,55));
 				button_1->setCallBack([this]() {
 					std::cout << "Button callback function change to Single Player: " << std::endl;
-					m_containerID = SINGLE_PLAYER;
+
+					m_containerID = state::SINGLE_PLAYER;
+
+					m_container = m_containers.begin() + state::SINGLE_PLAYER;
 				});
 				m_containers.back().attachObject(std::move(button_1));
 
-				// button_2
-				auto button_2 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
-				button_2->setPosition(sf::Vector2f(270.f, 277.f+60.f)); // declaring position of button in local gui coordinates bounded to window coordinate system
-				button_2->initText("Multiplayer", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
-				button_2->setResources(resources.holder<sf::Texture>().get("MAIN_MENU_BTN").get(), sf::Rect<int>(0, 0, 235, 25));
-				button_2->setIsTextureClickable(true, resources.holder<sf::Texture>().get("MAIN_MENU_BTN").get(), sf::Rect<int>(236, 0, 235, 25));
-				button_2->setTextColorHoverable(true, sf::Color(255, 255, 55));
-				button_2->setCallBack([this]() {
-					std::cout << "Button callback function change to Multiplayer: " << std::endl;
-				});
-				m_containers.back().attachObject(std::move(button_2));
-
-				// button_3
+				// button_Options
 				auto button_3 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
 				button_3->setPosition(sf::Vector2f(270.f, 277.f+120.f)); // declaring position of button in local gui coordinates bounded to window coordinate system
 				button_3->initText("Options", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
@@ -92,10 +101,14 @@ namespace gui
 				button_3->setTextColorHoverable(true, sf::Color(255, 255, 55));
 				button_3->setCallBack([this]() {
 					std::cout << "Button callback function change to Options: " << std::endl;
+
+					m_containerID = state::OPTIONS;
+
+					m_container = m_containers.begin() + state::OPTIONS;
 				});
 				m_containers.back().attachObject(std::move(button_3));
 
-				// button_4
+				// button_ExitGame
 				auto button_4 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
 				button_4->setPosition(sf::Vector2f(270.f, 277.f+240.f)); // declaring position of button in local gui coordinates bounded to window coordinate system
 				button_4->initText("Exit", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
@@ -116,9 +129,9 @@ namespace gui
 				m_containers.push_back(gui::Container(mhType));
 
 				// set background initial sprite
-				m_containers.back().setBackground(*resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BACK"));
+				m_containers.back().setBackground(*resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BACK"), sf::Color(255, 255, 255));
 
-				// button_return
+				// button_Return
 				auto button_S1 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
 				button_S1->setPosition(sf::Vector2f(299.f, 141.f + 381.f));	// 1- 299/93
 				button_S1->initText("Return", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
@@ -127,9 +140,75 @@ namespace gui
 				button_S1->setTextColorHoverable(true, sf::Color(255, 255, 55));
 				button_S1->setCallBack([this]() {
 					std::cout << "Button callback Return to Main Menu: " << std::endl;
-					m_containerID = MAIN_MENU;
+
+					m_containerID = state::MAIN_MENU;
+
+					m_container = m_containers.begin() + state::MAIN_MENU;
 				});
 				m_containers.back().attachObject(std::move(button_S1));
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				//--------------------------------------- Container 3 - Multi Player -----------------------------------------------------//
+				{
+					m_containers.push_back(gui::Container(mhType));
+
+					// set background initial sprite
+					m_containers.back().setBackground(*resources.holder<sf::Texture>().get("BLACK_MENU_BACK"), sf::Color(255, 255, 255));
+
+					// button_Return
+					auto button_M1 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
+					button_M1->setPosition(sf::Vector2f(299.f, 141.f + 381.f));	// 1- 299/93
+					button_M1->initText("Return", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -2.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
+					button_M1->setResources(resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BTN").get(), sf::Rect<int>(0, 0, 235, 25));
+					button_M1->setIsTextureClickable(true, resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BTN").get(), sf::Rect<int>(236, 0, 235, 25));
+					button_M1->setTextColorHoverable(true, sf::Color(255, 255, 55));
+					button_M1->setCallBack([this]() {
+						std::cout << "Button callback Return to Main Menu: " << std::endl;
+
+						m_containerID = state::MAIN_MENU;
+
+						m_container = m_containers.begin() + state::MAIN_MENU;
+					});
+					m_containers.back().attachObject(std::move(button_M1));
+
+					// EditBox check
+					auto editBox_M1 = std::make_unique<gui::EditBox>(InputValidation::ALL_TEXT, sf::Vector2f(500.f, 30.f), sf::Color(55, 55, 55));
+					editBox_M1->setPosition(sf::Vector2f(100.f, 141.f + 301.f));	// 1- 299/93
+					editBox_M1->initText("EditBox not developed yet.", *resources.holder<sf::Font>().get("FONT_TAHOME"), 10, sf::Text::Bold, sf::Color(188, 188, 0));
+					editBox_M1->setCallBack([this]() {
+						std::cout << "Button callback Return to Main Menu: " << std::endl;
+
+						m_containerID = state::MAIN_MENU;
+
+						m_container = m_containers.begin() + state::MAIN_MENU;
+					});
+					m_containers.back().attachObject(std::move(editBox_M1));
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+				//------------------------------------------ Container 4 - Options -------------------------------------------------------//
+
+				m_containers.push_back(gui::Container(mhType));
+
+				// set background initial sprite
+				m_containers.back().setBackground(*resources.holder<sf::Texture>().get("BLACK_MENU_BACK"), sf::Color(255,255,255));
+
+				// button_Return
+				auto button_O1 = std::make_unique<gui::Button>(sf::Vector2f(235.f, 25.f), sf::Color(255, 255, 255));
+				button_O1->setPosition(sf::Vector2f(299.f, 141.f + 381.f));	// 1- 299/93
+				button_O1->initText("Return", *resources.holder<sf::Font>().get("FONT_TAHOME"), TextAligning::CENTER, sf::Vector2f(0.f, -1.f), 13, sf::Text::Bold, sf::Color(188, 188, 0));
+				button_O1->setResources(resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BTN").get(), sf::Rect<int>(0, 0, 235, 25));
+				button_O1->setIsTextureClickable(true, resources.holder<sf::Texture>().get("S_SINGLEPLAYER_BTN").get(), sf::Rect<int>(236, 0, 235, 25));
+				button_O1->setTextColorHoverable(true, sf::Color(255, 255, 55));
+				button_O1->setCallBack([this]() {
+					std::cout << "Button callback Return to Main Menu: " << std::endl;
+
+					m_containerID = state::MAIN_MENU;
+
+					m_container = m_containers.begin() + state::MAIN_MENU;
+				});
+				m_containers.back().attachObject(std::move(button_O1));
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -172,8 +251,8 @@ namespace gui
 
 	void ProgramGUI::updateContainer()
 	{
-		if(m_containerID >= 0)
-			m_container = m_containers.begin() + m_containerID;
+		//if(m_containerID >= 0)
+		m_container = m_containers.begin() + m_containerID;
 	}
 
 	//bool ProgramGUI::loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska, sf::Color alphaMask)

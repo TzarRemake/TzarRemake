@@ -24,15 +24,16 @@
 
 namespace gui
 {
-	Button::Button(sf::Vector2f size, const sf::Color & normColor)
+	Button::Button(sf::Vector2f size, sf::Color normColor) :
+		Widget(normColor)
 	{
-		m_normColor = normColor;
 		// initialize vertices
 		m_vertices.setPrimitiveType(sf::Quads);
-		m_vertices.append(sf::Vertex(sf::Vector2f(0.f,0.f), m_normColor));
-		m_vertices.append(sf::Vertex(sf::Vector2f(size.x,0.f), m_normColor));
-		m_vertices.append(sf::Vertex(size, m_normColor));
-		m_vertices.append(sf::Vertex(sf::Vector2f(0.f,size.y), m_normColor));
+		m_vertices.append(sf::Vertex(sf::Vector2f(0.f,0.f), normColor));
+		m_vertices.append(sf::Vertex(sf::Vector2f(size.x,0.f), normColor));
+		m_vertices.append(sf::Vertex(size, normColor));
+		m_vertices.append(sf::Vertex(sf::Vector2f(0.f,size.y), normColor));
+
 		// initialize local bounding rect
 		m_floatRect = sf::Rect<float>(0, 0, size.x, size.y);
 

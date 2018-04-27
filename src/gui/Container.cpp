@@ -25,7 +25,7 @@
 namespace gui
 {
 	Container::Container(MouseHandlingType mhType) : 
-		m_mhType{mhType}
+		Widget{sf::Color(0,0,0,0)}, m_mhType{mhType}
 	{
 		std::cout << "Container constructor working" << std::endl;
 		switch (mhType)
@@ -37,7 +37,7 @@ namespace gui
 			case MouseHandlingType::SEARCH_MATRIX:
 			{
 				static_assert(tab_i_default == -1, "Default value for tab container should be -1");
-				m_inputMatrix = std::make_unique<mat::Matrix<int>>(WIN_WIDTH, WIN_HEIGHT, tab_i_default);
+				m_inputMatrix = std::make_unique<mat::Matrix<char>>(WIN_WIDTH, WIN_HEIGHT, tab_i_default);
 				break;
 			}
 			default:
@@ -57,7 +57,8 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	Container::Container(Container && obj)
+	Container::Container(Container && obj) :
+		Widget{obj.m_normColor}
 	{
 		m_background = obj.m_background;
 		m_boundary = obj.m_boundary;
@@ -86,10 +87,12 @@ namespace gui
 
 	void Container::handleEvents(sf::Event & event)
 	{
+		//tst::FunctionTimer timer = tst::FunctionTimer();
 		try
 		{
 			switch (event.type)
 			{
+				//------------------------------------------- Mouse events --------------------------------------------------------//
 				case sf::Event::MouseMoved:
 				{
 					auto it = getWidget(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)); // get widget under mouse position
@@ -110,7 +113,7 @@ namespace gui
 				}
 				case sf::Event::MouseButtonPressed:
 				{
-					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)); // get widget under mouse click position
 					if (it != m_Children.end())
 					{
 						it->get()->handleEvents(Event::EventType::startClick);
@@ -120,18 +123,28 @@ namespace gui
 				}
 				case sf::Event::MouseButtonReleased:
 				{
-					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)); // get widget under mouse release mouse position
 					if (m_clickedWidget != m_Children.end())
 					{
+						m_clickedWidget->get()->handleEvents(Event::EventType::stopClick);
 						if (it == m_clickedWidget)
 						{
 							it->get()->handleEvents(Event::EventType::click);
 						}
-						m_clickedWidget->get()->handleEvents(Event::EventType::stopClick);
 						m_clickedWidget = m_Children.end();
 					}
 					break;
 				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+				//----------------------------------------- Keyboard events --------------------------------------------------------//
+				case sf::Event::TextEntered:
+				{
+					if (event.text.unicode < 128)
+						std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 		}
 		catch (const std::out_of_range & e)
@@ -162,16 +175,41 @@ namespace gui
 		{
 			case MouseHandlingType::SEARCH_BOUNDARY:
 			{
-				unsigned int index = 0;
 				if (m_boundary.contains(position))
 				{
-					for (auto it = m_boundaries.begin() ; it != m_boundaries.end() ; ++it)
+					unsigned int positionKey = position.x + position.y*WIN_WIDTH;
+					for (auto it = m_boundaries.begin() ; it != m_boundaries.end() ; )
 					{
-						if (it->contains(position))
+						unsigned int index = it->tab;
+						if (it->rect.contains(position))
 						{
-							return (m_Children.begin() + index);
+							return (m_Children.begin() + it->tab);
 						}
-						++index;
+						else
+						{
+							unsigned int righChildID = RectBinTree::getChildRight(index);
+							unsigned int leftChildID = RectBinTree::getChildLeft(index);
+
+							// if positionKey is higher than current it, then go to rightChild
+							if (positionKey > RectBinTree::getKey(it->rect))
+							{
+								if (it->rightChildExist)
+								{
+									it = m_boundaries.begin() + righChildID;
+								}
+								else
+									break;
+							}
+							else
+							{
+								if (it->leftChildExist)
+								{
+									it = m_boundaries.begin() + leftChildID;
+								}
+								else
+									break;
+							}
+						}
 					}
 				}
 				break;
@@ -197,6 +235,7 @@ namespace gui
 				break;
 			}
 		}
+		//std::cout << "Container::getWIdget()\n";
 		return m_Children.end();
 	}
 }

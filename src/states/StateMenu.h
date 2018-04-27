@@ -22,12 +22,24 @@
 
 #include "GameState.h"
 #include "../gui/ProgramGUI.h"
-#include "../tester/timer.h"
 
 //--------------------------------------------------------------------------
 
 namespace state
 {
+	/*!
+	* \brief Submenu id
+	*/
+	enum MenuContainerID
+	{
+		MAIN_MENU = 0,
+		SINGLE_PLAYER,
+		MULTI_PLAYER,
+		OPTIONS,
+		EXIT,
+	};
+
+	//--------------------------------------------------------------------------
 
 	class Menu : public GameState
 	{
@@ -40,21 +52,7 @@ namespace state
 		virtual void shutdown() override;
 		virtual void update(sf::Time& delta) override;
 
-		/*!
-		* \brief Load texture into texture holder
-		*
-		* \param textId Id of texture
-		* \param strTex Reference to const string which holds relative path to texture resource file
-		* \param isAlphaMaska Indicates if alphaMask variable is used
-		* \param alphaMask This is color which is extruded from texture
-		*
-		* \return Return true if texture was succesfully loadedk, otherwise return false
-		*
-		*/
-		//bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0, 0, 0));
-
 	private:
 		std::unique_ptr<gui::ProgramGUI> m_guiObject;	///< gui for menu
-		//TextureHolder m_textureHolder;					///< texture holder
 	};
 }

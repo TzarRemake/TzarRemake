@@ -23,6 +23,8 @@
 #include "Widget.h"
 #include "Matrix.h"
 #include "Button.h"
+#include "GuiAllocators.h"
+#include "../tester/timer.h"
 
 //--------------------------------------------------------------------------
 
@@ -88,7 +90,7 @@ namespace gui
 		void attachObject(std::unique_ptr<T> widget)
 		{
 			assert((std::is_base_of<Widget, T>::value) == true );
-			sf::Rect<float> bounds = widget->getGlobalBounds();
+			sf::Rect<int> bounds = static_cast<sf::Rect<int>>(widget->getGlobalBounds());
 
 			// check if new widget boundaries exceed global menu boundaries
 			if (bounds.left < m_boundary.left)
@@ -100,7 +102,7 @@ namespace gui
 			{
 				case MouseHandlingType::SEARCH_BOUNDARY:
 				{
-					m_boundaries.push_back(static_cast<sf::Rect<int>>(bounds));
+					m_boundaries.insert(bounds);
 					break;
 				}
 				case MouseHandlingType::SEARCH_MATRIX:
@@ -122,31 +124,35 @@ namespace gui
 		/*!
 		* \brief Set brackground sprite
 		*/
-		void setBackground(const sf::Texture & texture)
+		void setBackground(const sf::Texture & texture, sf::Color color)
 		{
 			m_background.setTexture(texture);
+			m_background.setColor(color);
 		}
 
 	private:
 	    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	    {
+			//if(m_background.getTexture() !=nullptr)
 			target.draw(m_background);
-	    	for(auto & m: m_Children)
+
+	    	for(auto it = m_Children.cbegin();  it != m_Children.cend() ; ++it)
 	    	{
-	    		target.draw(*m);
+	    		target.draw(*it->get());
 	    	}
 	    }
 
 		MouseHandlingType m_mhType;											///< Algorithm used when handling mouse events
 		sf::Sprite m_background;											///< Background sprite
 	    std::vector<std::unique_ptr<gui::Widget>> m_Children;				///< Storage for all widgets
+		sf::Rect<int> m_boundary{ sf::Rect<int>(WIN_WIDTH,WIN_HEIGHT,0,0) };///< Global rectangle boundary where all widgets are positioned
 
-		std::vector<sf::Rect<int>> m_boundaries;							///< Rectangle boundaries for all widgets
-		sf::Rect<int> m_boundary{sf::Rect<int>(WIN_WIDTH,WIN_HEIGHT,0,0)};	///< Rectangle boundary for menu
+		//MouseHandlingType::SEARCH_BOUNDARY
+		RectBinTree m_boundaries;											///< Rectangle boundaries for all widgets
 
-		std::unique_ptr<mat::Matrix<int>> m_inputMatrix;					///< matrix which holds information about indexes of widgets in all window pixels
+		// MouseHandlingType::SEARCH_MATRIX
+		std::unique_ptr<mat::Matrix<char>> m_inputMatrix;					///< matrix which holds information about indexes of widgets in all window pixels
 		static constexpr int tab_i_default = -1;							///< default value for m_inputMatrix for places without any widget
-		//static int tab_i;
 
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_hoveredWidget; ///< iterator to actually hovered Widget
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_clickedWidget; ///< iterator to actually clicked Widget

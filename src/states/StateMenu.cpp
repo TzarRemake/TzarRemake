@@ -21,6 +21,8 @@
 #include "StateMenu.h"
 #include "../GameEngine.h"
 
+#include <thread>
+
 //--------------------------------------------------------------------------
 
 namespace state
@@ -30,7 +32,8 @@ namespace state
 		// create GUI
 		m_guiObject = std::make_unique<gui::ProgramGUI>(this, &engine, gui::GuiType::MAIN_MENU, gui::MouseHandlingType::SEARCH_BOUNDARY);
 		auto font = engine.resources.holder<sf::Font>().get("main");
-		tst::Timer<tst::TimerID::StateMenu>::init(*font);
+		tst::Timer<tst::TimerID::StateMenu>::init(engine.window().get(), *font);
+		tst::Timer2<tst::TimerID::StateMenu>::init(engine.window().get(), *font);
 	}
 
 	//--------------------------------------------------------------------------
@@ -51,16 +54,13 @@ namespace state
 
 	void Menu::update(sf::Time& delta)
 	{
-		//eh::Event event;
-		//while (m_eventHandler.pullEvent(event))
-		//{
-		//	m_guiObject->handleEvent(event);
-		//}
-		m_guiObject->updateContainer();
 		m_guiObject->draw(*engine.window());
 
+		//-- Timers for fps/frame time
+		tst::Timer<tst::TimerID::StateMenu> timer = tst::Timer<tst::TimerID::StateMenu>();
+		//tst::Timer2<tst::TimerID::StateMenu> timer2 = tst::Timer2<tst::TimerID::StateMenu>();
 		//--
-		tst::Timer<tst::TimerID::StateMenu> timer = tst::Timer<tst::TimerID::StateMenu>(engine.window().get());
-		//--
+
+		//m_guiObject->updateContainer(); // update actually used submenu container
 	}
 }
