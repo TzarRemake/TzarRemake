@@ -49,8 +49,8 @@ namespace gui
 
 		//--------------------------------------------------------------------------
 
-		virtual void handleEvents(Event::EventType event) override;
-		virtual void update() override;
+		virtual void handleCommand(CommandHandler * const sender, const CommandArgs  & args) override;
+		virtual void update(sf::Time& delta) override;
 		/*!
 		* \brief Get center of widget in local coordinate system
 		*/
@@ -131,16 +131,68 @@ namespace gui
 		*
 		*/
 		void initText(const std::string & str, const sf::Font & font, 
-			unsigned charSize = 30, sf::Text::Style style = sf::Text::Bold, sf::Color color = sf::Color(255, 255, 255));
+			const sf::Vector2f & offset = sf::Vector2f(0.f, 0.f), unsigned charSize = 30, sf::Text::Style style = sf::Text::Bold, sf::Color color = sf::Color(255, 255, 255));
+
+		//--------------------------------------------------------------------------
+
+		/*!
+		* \brief Function which can be used to catch left mouse click events
+		*/
+		void onLeftMouseClicked(void * sender, const gui::EventArgs * args)
+		{
+			std::cout << "EditBox: Got Left Mouse Clicked" << std::endl;
+			if (args->widgetPointer == this)
+			{
+				startCursorBlinking();
+			}
+			else
+			{
+				stopCursorBlinking();
+			}
+		}
 
 	private:
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+		/*!
+		* \brief Start/restart cursor blinking
+		*/
+		void startCursorBlinking()
+		{
+			m_timer = 0.f;
+			sf::Color currentColor = m_cursor.getFillColor();
+			m_cursor.setFillColor(sf::Color(currentColor.r, currentColor.g, currentColor.b, 255));
+		}
+
+		/*!
+		* \brief Stop cursor blinking
+		*/
+		void stopCursorBlinking()
+		{
+			sf::Color currentColor = m_cursor.getFillColor();
+			m_cursor.setFillColor(sf::Color(currentColor.r, currentColor.g, currentColor.b, 0));
+			m_timer = -100000.f;
+		}
+
+		/*!
+		* \brief Update position of cursor based on text position
+		*/
+		void updateCursorPosition()
+		{
+			sf::Rect<float> textRect = m_text.getLocalBounds();
+			m_cursor.setPosition(m_offset + sf::Vector2f(textRect.left + textRect.width, 1.f));
+		}
+
+		sf::Vector2f m_offset;				///< Offset for text and cursor position
 		sf::Text m_text;					///< text object which user can change
+		sf::RectangleShape m_cursor;		///< Blinking cursor object positoned on text
 		sf::Rect<float> m_floatRect;		///< Local bounding rectangle of editBox
 		std::function<void()> m_callback;	///< Object which holds function callback which occur when widget is pressed
 		sf::Texture * m_texture;			///< Pointer to texture objects
 		InputValidation m_inpValidation;	///< indicates what type of input is valid
+
+		constexpr static const float blinkTime = 0.5f;	///< amount of time between blinks
+		float m_timer = -100000.f;				///< Timer for cursor blinking
 	};
 }
 

@@ -56,11 +56,11 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void Button::handleEvents(Event::EventType event)
+	void Button::handleCommand(CommandHandler * const sender, const CommandArgs  & args)
 	{
-		switch (event)
+		switch (args.type)
 		{
-			case Event::EventType::startHover:
+			case CommandArgs::CommandType::startHover:
 			{
 				if ((getIsHoverable()))
 				{
@@ -81,7 +81,7 @@ namespace gui
 				}
 				break;
 			}
-			case Event::EventType::stopHover:
+			case CommandArgs::CommandType::stopHover:
 			{
 				if (getIsColorHoverable())
 				{
@@ -99,7 +99,7 @@ namespace gui
 				setIsHovered(false);
 				break;
 			}
-			case Event::EventType::startClick:
+			case CommandArgs::CommandType::startClick:
 			{
 				if (getIsClickable())
 				{
@@ -116,7 +116,7 @@ namespace gui
 				}
 				break;
 			}
-			case Event::EventType::stopClick:
+			case CommandArgs::CommandType::stopClick:
 			{
 				if (getIsColorClickable())
 				{
@@ -141,7 +141,7 @@ namespace gui
 				setIsClicked(false);
 				break;
 			}
-			case Event::EventType::click:
+			case CommandArgs::CommandType::click:
 			{
 				if (getIsClickable())
 				{
@@ -155,7 +155,7 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void Button::update()
+	void Button::update(sf::Time& delta)
 	{
 
 	}
@@ -205,15 +205,15 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-    void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
-    {
-        states.transform *= getTransform();
+	void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		states.transform *= getTransform();
 
-        // apply the texture
-        states.texture = m_texture;
+		// apply the texture
+		states.texture = m_texture;
 
-        // draw the vertex array
-        target.draw(m_vertices, states);
-        target.draw(*(static_cast<sf::Text*>(m_text.get())), states);
-    }
+		// draw the vertex array
+		target.draw(m_vertices, states);
+		target.draw(*(static_cast<sf::Text*>(m_text.get())), states);
+	}
 }

@@ -173,17 +173,16 @@ namespace gui
 					m_containers.back().attachObject(std::move(button_M1));
 
 					// EditBox check
-					auto editBox_M1 = std::make_unique<gui::EditBox>(InputValidation::ALL_TEXT, sf::Vector2f(500.f, 30.f), sf::Color(55, 55, 55));
+					auto editBox_M1 = std::make_unique<gui::EditBox>(InputValidation::ALL_TEXT, sf::Vector2f(500.f, 30.f), sf::Color(35, 35, 35));
 					editBox_M1->setPosition(sf::Vector2f(100.f, 141.f + 301.f));	// 1- 299/93
-					editBox_M1->initText("EditBox not developed yet.", *resources.holder<sf::Font>().get("FONT_TAHOME"), 10, sf::Text::Bold, sf::Color(188, 188, 0));
+					editBox_M1->initText("EditBox not fully developed yet.", *resources.holder<sf::Font>().get("FONT_TAHOME"), sf::Vector2f(2.f,3.f), 10, sf::Text::Bold, sf::Color(235, 235, 235));
 					editBox_M1->setCallBack([this]() {
-						std::cout << "Button callback Return to Main Menu: " << std::endl;
-
-						m_containerID = state::MAIN_MENU;
-
-						m_container = m_containers.begin() + state::MAIN_MENU;
+						std::cout << "EditBox callback: " << std::endl;
 					});
+					auto bDel = gui::Delegate<void(void*, const gui::EventArgs*)>::factory<EditBox, &EditBox::onLeftMouseClicked>(editBox_M1.get());
+					m_containers.back().leftMouseClicked += bDel;
 					m_containers.back().attachObject(std::move(editBox_M1));
+
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -233,18 +232,25 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
+	void ProgramGUI::handleEvent(sf::Event & event)
+	{
+		m_container->handleEvents(event);
+	}
+
+	//--------------------------------------------------------------------------
+
+	void ProgramGUI::update(sf::Time & delta)
+	{
+		m_container->update(delta);
+	}
+
+	//--------------------------------------------------------------------------
+
 	void ProgramGUI::draw(sf::RenderWindow & window)
 	{
 		window.setActive(true);
 		//window.setView(window.getDefaultView());
 		window.draw(*m_container);
-	}
-
-	//--------------------------------------------------------------------------
-
-	void ProgramGUI::handleEvent(sf::Event & event)
-	{
-		m_container->handleEvents(event);
 	}
 
 	//--------------------------------------------------------------------------
@@ -255,40 +261,9 @@ namespace gui
 		m_container = m_containers.begin() + m_containerID;
 	}
 
-	//bool ProgramGUI::loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska, sf::Color alphaMask)
+	//void ProgramGUI::changeContainer(state::MenuContainerID containerID)
 	//{
-	//	try
-	//	{
-	//		std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
-
-	//		// load texture into textureHolder
-	//		if (isAlphaMaska == false)
-	//		{
-	//			m_textureHolder.load(texID, strTex);
-	//		}
-	//		// load texture into textureHolder with mask
-	//		else
-	//		{
-	//			sf::Image image;
-	//			if (!image.loadFromFile(strTex))
-	//				throw std::runtime_error("sf::Image::loadFromFile() - Failed to load "
-	//					+ strTex);
-	//			image.createMaskFromColor(alphaMask);
-	//			if (!texture->loadFromImage(image))
-	//				throw std::runtime_error("sf::Image::loadFromImage() - Failed to load "
-	//					+ strTex);
-	//			m_textureHolder.add(texID, std::move(texture));
-	//		}
-	//	}
-	//	catch (std::exception & e)
-	//	{
-	//		std::cout << "ProgramGUI::loadTexture() failed: " << e.what() << std::endl;
-	//		auto func = atexit([]() { 
-	//			std::cout << "Press enter to terminate program... " << std::endl;
-	//			std::cin.get(); 
-	//		});
-	//		exit(EXIT_FAILURE);
-	//	}
-	//	return true;
+	//	m_container->restart();
+	//	m_container = m_containers.begin() + containerID;
 	//}
 }

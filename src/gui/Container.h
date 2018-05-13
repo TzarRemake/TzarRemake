@@ -51,9 +51,9 @@ namespace gui
 
 		//--------------------------------------------------------------------------
 
-		virtual void handleEvents(Event::EventType event) override;
+		virtual void handleCommand(CommandHandler * const sender, const CommandArgs  & args) override;
 
-		virtual void update() override;
+		virtual void update(sf::Time& delta) override;
 
 		/*!
 		* \brief Get center of widget in local coordinate system
@@ -71,6 +71,16 @@ namespace gui
 		void init();
 
 		void handleEvents(sf::Event& event);
+
+		/*!
+		* \brief Restart container to it's initial state
+		*/
+		void restart()
+		{
+			m_hoveredWidget = m_Children.end();
+			m_choosenWidget = m_Children.end();
+			m_clickedWidget = m_Children.end();
+		}
 
 		/*!
 		* \brief Get iterator to widget
@@ -130,6 +140,21 @@ namespace gui
 			m_background.setColor(color);
 		}
 
+
+		GuiEvent leftMouseClicked;	///< Event raised upon left mouse click
+		//GuiEvent textEntered;		///< Event raised upon entering some text(from keyboard)
+
+	protected:
+		void onLeftMouseClicked(const gui::EventArgs & args)
+		{
+			leftMouseClicked(this, args);
+		}
+		//void onTextEntered(const gui::EventArgs & args)
+		//{
+		//	textEntered(this, args);
+		//}
+
+
 	private:
 	    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	    {
@@ -154,7 +179,8 @@ namespace gui
 		std::unique_ptr<mat::Matrix<char>> m_inputMatrix;					///< matrix which holds information about indexes of widgets in all window pixels
 		static constexpr int tab_i_default = -1;							///< default value for m_inputMatrix for places without any widget
 
-		std::vector<std::unique_ptr<gui::Widget>>::iterator m_hoveredWidget; ///< iterator to actually hovered Widget
-		std::vector<std::unique_ptr<gui::Widget>>::iterator m_clickedWidget; ///< iterator to actually clicked Widget
+		std::vector<std::unique_ptr<gui::Widget>>::iterator m_hoveredWidget; ///< Iterator to actually hovered Widget
+		std::vector<std::unique_ptr<gui::Widget>>::iterator m_clickedWidget; ///< Iterator to actually clicked Widget(choosen with left mouse down)
+		std::vector<std::unique_ptr<gui::Widget>>::iterator m_choosenWidget; ///< iterator to choosen(active) widget
 	};
 }

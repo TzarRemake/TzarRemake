@@ -65,6 +65,9 @@ namespace gui
 		m_Children = std::move(obj.m_Children);
 		m_boundaries = std::move(obj.m_boundaries);
 		m_inputMatrix = std::move(obj.m_inputMatrix);
+		leftMouseClicked = std::move(obj.leftMouseClicked);
+		//textEntered = std::move(obj.textEntered);
+		//command = std::move(obj.command);
 		m_mhType = obj.m_mhType;
 	}
 
@@ -74,11 +77,12 @@ namespace gui
 	{
 		m_hoveredWidget = m_Children.end();
 		m_clickedWidget = m_Children.end();
+		m_choosenWidget = m_Children.end();
 	}
 
 	//--------------------------------------------------------------------------
 
-	void Container::handleEvents(Event::EventType event)
+	void Container::handleCommand(CommandHandler * const sender, const CommandArgs  & args)
 	{
 
 	}
@@ -87,7 +91,6 @@ namespace gui
 
 	void Container::handleEvents(sf::Event & event)
 	{
-		//tst::FunctionTimer timer = tst::FunctionTimer();
 		try
 		{
 			switch (event.type)
@@ -96,16 +99,22 @@ namespace gui
 				case sf::Event::MouseMoved:
 				{
 					auto it = getWidget(sf::Vector2i(event.mouseMove.x, event.mouseMove.y)); // get widget under mouse position
-					if (it != m_hoveredWidget)
+					if (it == m_hoveredWidget)
 					{
-						if (m_hoveredWidget != m_Children.end())
+						break;
+					}
+					else
+					{
+						if (m_Children.end() != m_hoveredWidget)
 						{
-							m_hoveredWidget->get()->handleEvents(Event::EventType::stopHover);
+							commander.args.type = CommandArgs::CommandType::stopHover;
+							commander(this, m_hoveredWidget->get());
 							m_hoveredWidget = m_Children.end();
 						}
-						if (it != m_Children.end())
+						if (m_Children.end() != it)
 						{
-							it->get()->handleEvents(Event::EventType::startHover);
+							commander.args.type = CommandArgs::CommandType::startHover;
+							commander(this, it->get());
 							m_hoveredWidget = it;
 						}
 					}
@@ -116,7 +125,8 @@ namespace gui
 					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)); // get widget under mouse click position
 					if (it != m_Children.end())
 					{
-						it->get()->handleEvents(Event::EventType::startClick);
+						commander.args.type = CommandArgs::CommandType::startClick;
+						commander(this, m_hoveredWidget->get());
 						m_clickedWidget = it;
 					}
 					break;
@@ -124,15 +134,32 @@ namespace gui
 				case sf::Event::MouseButtonReleased:
 				{
 					auto it = getWidget(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)); // get widget under mouse release mouse position
+
+					EventArgs args;
+					args.type = EventArgs::EventType::leftMouseDown;
+
+
 					if (m_clickedWidget != m_Children.end())
 					{
-						m_clickedWidget->get()->handleEvents(Event::EventType::stopClick);
+						commander.args.type = CommandArgs::CommandType::stopClick;
+						commander(this, m_clickedWidget->get());
 						if (it == m_clickedWidget)
 						{
-							it->get()->handleEvents(Event::EventType::click);
+							commander.args.type = CommandArgs::CommandType::click;
+							commander(this, m_clickedWidget->get());
 						}
+						m_choosenWidget = it;
+						m_clickedWidget = m_Children.end();
+						args.widgetPointer = it->get();
+					}
+					else
+					{
+						args.widgetPointer = nullptr;
+						m_choosenWidget = m_Children.end();
 						m_clickedWidget = m_Children.end();
 					}
+
+					onLeftMouseClicked(args);
 					break;
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +169,18 @@ namespace gui
 				case sf::Event::TextEntered:
 				{
 					if (event.text.unicode < 128)
+					{	
+						if (m_choosenWidget != m_Children.end())
+						{
+							commander.args.type = CommandArgs::CommandType::textEntered;
+							commander.args.unicodeCharacter = event.text.unicode;
+							commander(this, m_choosenWidget->get());
+						}
+
+
+						char c = static_cast<char>(event.text.unicode);
 						std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << std::endl;
+					}
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
@@ -155,9 +193,12 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void Container::update()
+	void Container::update(sf::Time& delta)
 	{
-
+		for (auto & w : m_Children)
+		{
+			w->update(delta);
+		}
 	}
 
 	//--------------------------------------------------------------------------

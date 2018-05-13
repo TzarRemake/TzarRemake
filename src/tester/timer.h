@@ -28,7 +28,7 @@
 
 //--------------------------------------------------------------------------
 
-namespace tst
+namespace tester
 {
 	enum class TimerID
 	{

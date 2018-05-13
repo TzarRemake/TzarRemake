@@ -20,7 +20,7 @@
 
 //--------------------------------------------------------------------------
 
-#include <Memory>
+#include <memory>
 #include <iostream>
 #include <cassert>
 #include <type_traits>
@@ -32,6 +32,7 @@
 //--------------------------------------------------------------------------
 
 #include "EventHandler.h"
+#include "CommandHandler.h"
 #include "../logic/defines.h"
 
 //--------------------------------------------------------------------------
@@ -51,7 +52,8 @@ namespace gui
 
 	class Widget : 	public sf::Drawable,
 					public sf::Transformable,
-					public sf::NonCopyable
+					public sf::NonCopyable,
+					public gui::CommandHandler
 	{
 	public:
 		Widget(sf::Color normColor):
@@ -71,12 +73,7 @@ namespace gui
 
 		//--------------------------------------------------------------------------
 
-		/*!
-		* \brief Handle event function which occur whenever some event happen over specified widget
-		*/
-		virtual void handleEvents(Event::EventType event) = 0;
-
-		virtual void update() {} ///< ??? not sure if this will be used in any way
+		virtual void update(sf::Time& delta) {}
 
 		/*!
 		* \brief Get center of widget in local coordinate system

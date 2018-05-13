@@ -32,8 +32,8 @@ namespace state
 		// create GUI
 		m_guiObject = std::make_unique<gui::ProgramGUI>(this, &engine, gui::GuiType::MAIN_MENU, gui::MouseHandlingType::SEARCH_BOUNDARY);
 		auto font = engine.resources.holder<sf::Font>().get("main");
-		tst::Timer<tst::TimerID::StateMenu>::init(engine.window().get(), *font);
-		tst::Timer2<tst::TimerID::StateMenu>::init(engine.window().get(), *font);
+		tester::Timer<tester::TimerID::StateMenu>::init(engine.window().get(), *font);
+		tester::Timer2<tester::TimerID::StateMenu>::init(engine.window().get(), *font);
 	}
 
 	//--------------------------------------------------------------------------
@@ -54,13 +54,14 @@ namespace state
 
 	void Menu::update(sf::Time& delta)
 	{
+		m_guiObject->update(delta);
 		m_guiObject->draw(*engine.window());
 
 		//-- Timers for fps/frame time
-		tst::Timer<tst::TimerID::StateMenu> timer = tst::Timer<tst::TimerID::StateMenu>();
-		//tst::Timer2<tst::TimerID::StateMenu> timer2 = tst::Timer2<tst::TimerID::StateMenu>();
+		tester::Timer<tester::TimerID::StateMenu> timer = tester::Timer<tester::TimerID::StateMenu>();
+		//tester::Timer2<tester::TimerID::StateMenu> timer2 = tester::Timer2<tester::TimerID::StateMenu>();
 		//--
 
-		//m_guiObject->updateContainer(); // update actually used submenu container
+		//m_guiObject->updateContainer(); // Update actually used GUI submenu container
 	}
 }

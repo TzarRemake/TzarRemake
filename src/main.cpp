@@ -19,13 +19,14 @@
 //--------------------------------------------------------------------------
 
 #include "GameEngine.h"
+#include "gui/EventHandler.h"
 
 //--------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
-    GameEngine engine;
-    int code = engine.run();
+	GameEngine engine;
+	int code = engine.run();
 
-    return code;
+	return code;
 }

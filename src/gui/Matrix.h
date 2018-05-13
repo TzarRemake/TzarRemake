@@ -62,7 +62,7 @@ namespace mat
 		 *
 		 * Set value without any bound checking.
 		 *
- 	 	 * \param width x coordinate of the node
+		 * \param width x coordinate of the node
 		 * \param height y coordinate of the node
 		 * \param value Reference to value which will be saved to specified node of the matrix
 		 *

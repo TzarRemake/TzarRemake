@@ -49,16 +49,66 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void EditBox::handleEvents(Event::EventType event)
+	void EditBox::handleCommand(CommandHandler * const sender, const CommandArgs  & args)
 	{
-
+		switch (args.type)
+		{
+			case CommandArgs::CommandType::click:
+			{
+				if (getIsClickable())
+				{
+					if (m_callback)
+						m_callback();
+				}
+				break;
+			}
+			case CommandArgs::CommandType::textEntered:
+			{
+				switch (args.unicodeCharacter)
+				{
+					case 8: // delete
+					{
+						std::string Text = m_text.getString();
+						if (!Text.empty())
+						{
+							Text.pop_back();
+							m_text.setString(Text);
+							updateCursorPosition();
+						}
+						break;
+					}
+					case 13: // enter
+					{
+						// implement enter??
+						m_text.setString("");
+						updateCursorPosition();
+						break;
+					}
+					default: // default key entered
+					{
+						std::string Text = m_text.getString();
+						char c = static_cast<char>(args.unicodeCharacter);
+						m_text.setString(Text + c);
+						updateCursorPosition();
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------
 
-	void EditBox::update()
+	void EditBox::update(sf::Time& delta)
 	{
-
+		m_timer += delta.asSeconds();
+		if (m_timer > blinkTime)
+		{
+			sf::Color currentColor = m_cursor.getFillColor();
+			currentColor.a = ~currentColor.a;
+			m_cursor.setFillColor(currentColor);
+			m_timer -= blinkTime;
+		}
 	}
 
 	//--------------------------------------------------------------------------
@@ -100,18 +150,29 @@ namespace gui
 	//--------------------------------------------------------------------------
 
 	void EditBox::initText(const std::string & str, const sf::Font & font, 
-		unsigned charSize, sf::Text::Style style, sf::Color color)
+		const sf::Vector2f & offset, unsigned charSize, sf::Text::Style style, sf::Color color)
 	{
+
+		// initialize text
+		m_offset = offset;
+		m_text.setPosition(offset);
 		m_text.setString(str);
 		m_text.setCharacterSize(charSize);
 		m_text.setStyle(style);
 		m_text.setFillColor(color);
 		m_text.setFont(font);
+
+		// initialize cursor shape
+		m_cursor.setSize(sf::Vector2f(2, charSize));
+		m_cursor.setFillColor(sf::Color(color.a, color.b, color.g, 0));
+
+		sf::Rect<float> textRect = m_text.getLocalBounds();
+		m_cursor.setPosition(offset + sf::Vector2f(textRect.left+ textRect.width,1.f));
 	}
 
 	//--------------------------------------------------------------------------
 
-	void EditBox::draw(sf::RenderTarget& target, sf::RenderStates states) const
+	inline void EditBox::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		states.transform *= getTransform();
 
@@ -121,5 +182,6 @@ namespace gui
 		// draw the vertex array
 		target.draw(m_vertices, states);
 		target.draw(m_text, states);
+		target.draw(m_cursor, states);
 	}
 }

@@ -49,9 +49,9 @@ namespace gui
 
 		//--------------------------------------------------------------------------
 
-		virtual void handleEvents(Event::EventType event) override;
+		virtual void handleCommand(CommandHandler * const sender, const CommandArgs  & args) override;
 
-		virtual void update() override;
+		virtual void update(sf::Time& delta) override;
 
 		/*!
 		* \brief Get center of widget in local coordinate system
@@ -136,7 +136,9 @@ namespace gui
 		void initText(const std::string & str, const sf::Font & font, TextAligning textAlining,
 			const sf::Vector2f & offset = sf::Vector2f(0.f,0.f), unsigned charSize = 30, sf::Text::Style style = sf::Text::Bold, sf::Color color = sf::Color(255,255,255));
 
-
+		/*!
+		* \brief Sets text of button to change color after hovering mouse
+		*/
 		void setTextColorHoverable(bool isHoverable, sf::Color color)
 		{
 			m_isTextColorHoverable = isHoverable;

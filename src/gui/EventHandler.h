@@ -20,13 +20,20 @@
 
 //--------------------------------------------------------------------------
 
+#include <vector>
+
+//--------------------------------------------------------------------------
+
+#include "Delegate.h"
+
+//--------------------------------------------------------------------------
+
 namespace gui
 {
-
 	/*!
-	 * \brief Class which holds all information about event
+	 * \brief Class which holds all information about raised event
 	 */
-	class Event
+	class EventArgs
 	{
 	public:
 		/*!
@@ -54,11 +61,16 @@ namespace gui
 		 */
 		enum class EventType
 		{
+			// Events send to widgets as messages
 			startHover,	///< start hovering widget		
 			stopHover,	///< stop hovering widget
 			startClick,	///< start click widget
 			stopClick,	///< stop click widget
 			click,		///< click widget
+
+			// Events subscribed and catched by all listeners 
+			leftMouseDown,	///< left mouse down
+			UnicodeEntered,	///< indicates that user entered unicode character on keyboard
 		};
 
 		EventType type;			///< specify event type of the object
@@ -66,19 +78,51 @@ namespace gui
 		/*!
 		 * \brief This union specify additional event information
 		 */
+		void * widgetPointer;		///< Pointer to choosen widget
 		union
 		{
-			Vector2i globalPosition2i; 	///< position on the window(grid)
-			Vector4i globalPosition4i; 	///< two positions on the window(grid)
+			char character;				///< character
+			unsigned int unicodeCharacter; ///< unicode character
+			//Vector2i globalPosition2i; 	///< position on the window(grid)
+			//Vector4i globalPosition4i; 	///< two positions on the window(grid)
 		};
 	};
 
 	//--------------------------------------------------------------------------
 
-	class EventHandler
+	/*!
+	* \brief Class for GUI Events
+	*/
+	class GuiEvent
 	{
 	public:
-		EventHandler() = default;
-		~EventHandler() = default;
+		GuiEvent() = default;
+		~GuiEvent() noexcept { }
+		GuiEvent(const GuiEvent & obj) = delete;		///< Deleted copy constructor
+		GuiEvent(GuiEvent && obj) = delete;				///< Deleted move constructor
+		GuiEvent & operator=(GuiEvent & obj) = delete;	///< Deleted assignement operator
+		GuiEvent & operator=(GuiEvent && obj) = default;///< Move assignement operator
+
+		/*
+		* \brief Raise event
+		*/
+		void operator()(void * sender, const EventArgs & args)
+		{
+			for (auto & d : m_delegates)
+			{
+				d(sender, &args);
+			}
+		}
+
+		/*!
+		* \brief Add delegate function to vector of delegates
+		*/
+		void operator += (const Delegate<void(void*, const EventArgs*)> & delegate)
+		{
+			m_delegates.emplace_back(delegate);
+		}
+
+	private:
+		std::vector<Delegate<void(void*, const EventArgs*)>> m_delegates; ///< Vector of all delegate functions to call when event is raised
 	};
 }

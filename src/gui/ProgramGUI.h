@@ -81,6 +81,25 @@ namespace gui
 		ProgramGUI & operator=(ProgramGUI && obj) = delete;	///< Deleted move assignement operator
 
 		/*!
+		* \brief Handle event for gui
+		*
+		* \param event Reference to sfml event
+		*
+		*/
+		void handleEvent(sf::Event & event);
+
+		/*!
+		* \brief Update all GUI objects according to passed time
+		*
+		* This function should be called in every update iteration of program in order
+		* to refresh logic inside all gui objects.
+		*
+		* \param delta Reference to time object which indicates time which passed since last update call
+		*
+		*/
+		void update(sf::Time& delta);
+
+		/*!
 		 * \brief Draw all GUI objects
 		 *
 		 * This function should be called in every draw iteration of program in order to refresh
@@ -92,14 +111,6 @@ namespace gui
 		void draw(sf::RenderWindow & window);
 
 		/*!
-		 * \brief Handle event for gui
-		 *
-		 * \param event Reference to sfml event
-		 *
-		 */
-		void handleEvent(sf::Event & event);
-
-		/*!
 		* \brief Change actually managed and drawed container to new one choosen in handleEvent phase
 		*
 		* This function should be used in every program iteration to ensure that changes to actually used
@@ -109,19 +120,18 @@ namespace gui
 		[[deprecated("Using of this function is no longer needed and need appropriate handle of volatile variable m_containerID")]]
 		void updateContainer();
 
-        /*!
-         * \brief Load texture into texture holder
-         *
-         * \param textId Id of texture
-         * \param strTex Reference to const string which holds relative path to texture resource file
-         * \param isAlphaMaska Indicates if alphaMask variable is used
-         * \param alphaMask This is color which is extruded from texture
-         *
-         * \return Return true if texture was succesfully loadedk, otherwise return false
-         *
-         */
-		//bool loadTexture(tls::TextureID texID, const std::string & strTex, bool isAlphaMaska = false, sf::Color alphaMask = sf::Color(0,0,0));
+		
 
+
+		/*!
+		* \brief Change actually active container
+		*
+		* This function should be used to change m_container iterator.
+		*
+		* \param newContainer Id of new active container
+		*
+		*/
+		//void changeContainer(state::MenuContainerID containerID);
 
 	private:
 		GameEngine * m_engine;				///< Pointer to program engine which initialized this GUI object

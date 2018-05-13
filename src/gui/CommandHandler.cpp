@@ -18,13 +18,19 @@
 
 //--------------------------------------------------------------------------
 
-#include "timer.h"
+#include "CommandHandler.h"
 
 //--------------------------------------------------------------------------
 
-namespace tester
+namespace gui
 {
-	std::chrono::time_point<std::chrono::high_resolution_clock> FunctionTimer::start = std::chrono::high_resolution_clock::now();
+	void GuiCommand::operator()(CommandHandler * const  sender, CommandHandler * const receiver)
+	{
+		receiver->handleCommand(sender, args);
+	}
 
-	std::chrono::time_point<std::chrono::high_resolution_clock> FunctionTimer::end = std::chrono::high_resolution_clock::now();
+	void GuiCommand::send(CommandHandler * const  sender, CommandHandler * const receiver)
+	{
+		receiver->handleCommand(sender, args);
+	}
 }
