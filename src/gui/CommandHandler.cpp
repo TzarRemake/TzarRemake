@@ -29,6 +29,8 @@ namespace gui
 		receiver->handleCommand(sender, args);
 	}
 
+	//--------------------------------------------------------------------------
+
 	void GuiCommand::send(CommandHandler * const  sender, CommandHandler * const receiver)
 	{
 		receiver->handleCommand(sender, args);

@@ -62,6 +62,6 @@ namespace state
 		//tester::Timer2<tester::TimerID::StateMenu> timer2 = tester::Timer2<tester::TimerID::StateMenu>();
 		//--
 
-		//m_guiObject->updateContainer(); // Update actually used GUI submenu container
+		m_guiObject->updateContainer(); // Update actually used GUI submenu container
 	}
 }

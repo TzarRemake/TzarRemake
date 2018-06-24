@@ -27,7 +27,7 @@
 namespace gui
 {
 	/*!
-	* \brief 
+	* \brief ??
 	*/
 	enum class InputValidation
 	{
@@ -156,6 +156,9 @@ namespace gui
 
 		/*!
 		* \brief Start/restart cursor blinking
+		*
+		* This function should be called whenever cursor for editbox should start/restart blinking.
+		*
 		*/
 		void startCursorBlinking()
 		{
@@ -166,6 +169,9 @@ namespace gui
 
 		/*!
 		* \brief Stop cursor blinking
+		*
+		* This function should be called whenever cursor for editbox should stop blinking.
+		*
 		*/
 		void stopCursorBlinking()
 		{
@@ -176,6 +182,9 @@ namespace gui
 
 		/*!
 		* \brief Update position of cursor based on text position
+		*
+		* This function should be called whenever text is eddited.
+		*
 		*/
 		void updateCursorPosition()
 		{

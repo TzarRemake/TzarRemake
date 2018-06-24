@@ -138,6 +138,9 @@ namespace gui
 
 		/*!
 		* \brief Sets text of button to change color after hovering mouse
+		*
+		* \param isHoverable Indicates if text over button change after hover
+		* \param color Color of text when mouse is hovering
 		*/
 		void setTextColorHoverable(bool isHoverable, sf::Color color)
 		{

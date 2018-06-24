@@ -70,9 +70,7 @@ namespace gui
 				button_2->setCallBack([this]() {
 					std::cout << "Button callback function change to Multiplayer: " << std::endl;
 
-					m_containerID = state::MULTI_PLAYER;
-
-					m_container = m_containers.begin() + state::MULTI_PLAYER;
+					m_newContainerID = state::MULTI_PLAYER;
 				});
 				m_containers.back().attachObject(std::move(button_2));
 
@@ -86,9 +84,7 @@ namespace gui
 				button_1->setCallBack([this]() {
 					std::cout << "Button callback function change to Single Player: " << std::endl;
 
-					m_containerID = state::SINGLE_PLAYER;
-
-					m_container = m_containers.begin() + state::SINGLE_PLAYER;
+					m_newContainerID = state::SINGLE_PLAYER;
 				});
 				m_containers.back().attachObject(std::move(button_1));
 
@@ -102,9 +98,7 @@ namespace gui
 				button_3->setCallBack([this]() {
 					std::cout << "Button callback function change to Options: " << std::endl;
 
-					m_containerID = state::OPTIONS;
-
-					m_container = m_containers.begin() + state::OPTIONS;
+					m_newContainerID = state::OPTIONS;
 				});
 				m_containers.back().attachObject(std::move(button_3));
 
@@ -141,9 +135,7 @@ namespace gui
 				button_S1->setCallBack([this]() {
 					std::cout << "Button callback Return to Main Menu: " << std::endl;
 
-					m_containerID = state::MAIN_MENU;
-
-					m_container = m_containers.begin() + state::MAIN_MENU;
+					m_newContainerID = state::MAIN_MENU;
 				});
 				m_containers.back().attachObject(std::move(button_S1));
 
@@ -166,9 +158,7 @@ namespace gui
 					button_M1->setCallBack([this]() {
 						std::cout << "Button callback Return to Main Menu: " << std::endl;
 
-						m_containerID = state::MAIN_MENU;
-
-						m_container = m_containers.begin() + state::MAIN_MENU;
+						m_newContainerID = state::MAIN_MENU;
 					});
 					m_containers.back().attachObject(std::move(button_M1));
 
@@ -203,9 +193,7 @@ namespace gui
 				button_O1->setCallBack([this]() {
 					std::cout << "Button callback Return to Main Menu: " << std::endl;
 
-					m_containerID = state::MAIN_MENU;
-
-					m_container = m_containers.begin() + state::MAIN_MENU;
+					m_newContainerID = state::MAIN_MENU;
 				});
 				m_containers.back().attachObject(std::move(button_O1));
 
@@ -258,7 +246,16 @@ namespace gui
 	void ProgramGUI::updateContainer()
 	{
 		//if(m_containerID >= 0)
-		m_container = m_containers.begin() + m_containerID;
+		auto m_containerTest = m_containers.begin() + m_newContainerID;
+		if (m_containerTest == m_container)
+		{
+			return;
+		}
+		else
+		{
+			m_container->restart();
+			m_container = m_containers.begin() + m_newContainerID;
+		}
 	}
 
 	//void ProgramGUI::changeContainer(state::MenuContainerID containerID)

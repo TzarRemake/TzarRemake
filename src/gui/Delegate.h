@@ -48,7 +48,6 @@ namespace gui
 		Delegate & operator=(Delegate & obj) = default;	///< Assignement operator
 		Delegate & operator=(Delegate && obj) = default;///< Move assignement operator
 
-
 		template<typename C, R(C::* const methodPtr)(Args...) >
 		static Delegate factory(C * const objectPtr) noexcept
 		{

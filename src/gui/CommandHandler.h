@@ -90,11 +90,21 @@ namespace gui
 
 		/*!
 		* \brief Sends command to receiver
+		*
+		* This is overloaded operator() which can be use to send command to receiver.
+		*
+		* \param sender Pointer to sender of command
+		* \param receiver Pointer to receiver of command
+		*
 		*/
 		void operator()(CommandHandler * const  sender, CommandHandler * const receiver);
 
 		/*!
 		* \brief Sends command to receiver
+		*
+		* \param sender Pointer to sender of command
+		* \param receiver Pointer to receiver of command
+		*
 		*/
 		void send(CommandHandler * const  sender, CommandHandler * const receiver);
 
@@ -112,6 +122,12 @@ namespace gui
 
 		/*!
 		* \brief Handle all received commands
+		*
+		* This function is called whenever command is sent to it's object.
+		*
+		* \param sender Pointer to sender of command
+		* \param args Reference to additional arguments send by command
+		*
 		*/
 		virtual void handleCommand(CommandHandler * const sender, const CommandArgs  & args) = 0;
 

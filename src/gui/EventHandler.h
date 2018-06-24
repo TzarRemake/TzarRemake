@@ -105,6 +105,12 @@ namespace gui
 
 		/*
 		* \brief Raise event
+		*
+		* This is overloaded operator() which subscribe event and inform all listeners.
+		*
+		* \param sender Pointer to object which subscribes event
+		* \param args Reference to additional arguments send by subscriber
+		*
 		*/
 		void operator()(void * sender, const EventArgs & args)
 		{
@@ -116,6 +122,9 @@ namespace gui
 
 		/*!
 		* \brief Add delegate function to vector of delegates
+		*
+		* \param delegate Delegate object added to vector of listeners 
+		*
 		*/
 		void operator += (const Delegate<void(void*, const EventArgs*)> & delegate)
 		{

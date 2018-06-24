@@ -113,11 +113,10 @@ namespace gui
 		/*!
 		* \brief Change actually managed and drawed container to new one choosen in handleEvent phase
 		*
-		* This function should be used in every program iteration to ensure that changes to actually used
+		* This function should be used in every program iteration in update phase. This ensures that changes to actually used
 		* container submenu are submitted.
 		*
 		*/
-		[[deprecated("Using of this function is no longer needed and need appropriate handle of volatile variable m_containerID")]]
 		void updateContainer();
 
 		
@@ -139,8 +138,7 @@ namespace gui
 
 		std::vector<gui::Container> m_containers;			///< Main gui vector of containers objects which hold all other widgets
 		std::vector<gui::Container>::iterator m_container;	///< Iterator to actuallly used gui container
-		//[[deprecated("This volatile variable may not be used if deprecated function void updateContainer() is not used as well")]]
-		volatile int m_containerID{-1};						///< Index of container which will be used in next program iteration
+		volatile int m_newContainerID{0};					///< Index of container which will be used in next program iteration
 
 		ResourceManager<MAIN_RESOURCES> resources;	///< Recources manager (fonts, textures, etc..)
 	};

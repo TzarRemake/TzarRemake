@@ -70,10 +70,20 @@ namespace gui
 		*/
 		void init();
 
+		/*
+		* \brief Handle SFML event sent to container
+		*
+		* \event Reference to SFML event 
+		*
+		*/
 		void handleEvents(sf::Event& event);
 
 		/*!
 		* \brief Restart container to it's initial state
+		*
+		* This function should be called after initializing all widget childrens and whenever new container is choosen
+		* in menu
+		*
 		*/
 		void restart()
 		{
@@ -88,13 +98,19 @@ namespace gui
 		* This function return iterator
 		*
 		* \param position Position on the window
+		*
 		* \return Iterator to widget
 		*
 		*/
 		std::vector<std::unique_ptr<gui::Widget>>::iterator getWidget(sf::Vector2i position);
 
 		/*!
-		 * \brief This function can add gui::Widget object to container
+		 * \brief Add gui::Widget object to container
+		 *
+		 * This function adds widget to list of children widgets grouped in this intance of container.
+		 *
+		 * \param widget std::unique_ptr to widget
+		 *
 		 */
 		template<class T>
 		void attachObject(std::unique_ptr<T> widget)
@@ -133,6 +149,10 @@ namespace gui
 
 		/*!
 		* \brief Set brackground sprite
+		*
+		* This function set texture and it's color of background sprite, which is drawed before
+		* all other content of container like widgets.
+		*
 		*/
 		void setBackground(const sf::Texture & texture, sf::Color color)
 		{
@@ -145,10 +165,18 @@ namespace gui
 		//GuiEvent textEntered;		///< Event raised upon entering some text(from keyboard)
 
 	protected:
+		/*!
+		* \brief Function which raise event leftMouseClicked
+		*
+		* This function should be used when container wants to subscribe event leftMouseClicked.
+		* All event listeners will be informed and it's appropriate functions will be called.
+		*
+		*/
 		void onLeftMouseClicked(const gui::EventArgs & args)
 		{
 			leftMouseClicked(this, args);
 		}
+
 		//void onTextEntered(const gui::EventArgs & args)
 		//{
 		//	textEntered(this, args);
@@ -159,8 +187,9 @@ namespace gui
 	    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	    {
 			//if(m_background.getTexture() !=nullptr)
-			target.draw(m_background);
+			target.draw(m_background); // draw background
 
+			// draw all widget childrens
 	    	for(auto it = m_Children.cbegin();  it != m_Children.cend() ; ++it)
 	    	{
 	    		target.draw(*it->get());

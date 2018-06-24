@@ -42,7 +42,7 @@ namespace gui
 	//--------------------------------------------------------------------------
 
 	/*!
-	* \brief This is wrapper class around text to use with widgets
+	* \brief This is wrapper class around sfml text class
 	*/
 	class Text : public sf::Text
 	{
@@ -52,6 +52,9 @@ namespace gui
 		
 		/*!
 		* \brief align text with widget boundary
+		*
+		* This function should be called after text string is set
+		*
 		*/
 		void align();
 
@@ -61,3 +64,10 @@ namespace gui
 		sf::Vector2f m_offset;			///< Offset position of text
 	};
 }
+
+/*!
+* \class gui::Text
+*
+* gui::Text is 
+*
+*/
