@@ -54,12 +54,12 @@ namespace gui
 		*/
 		enum class CommandType
 		{
-			startHover,	///< start hovering widget		
-			stopHover,	///< stop hovering widget
-			startClick,	///< start click widget
-			stopClick,	///< stop click widget
-			click,		///< click widget
-			textEntered,///< entered text
+			startHover,		///< start hovering widget		
+			stopHover,		///< stop hovering widget
+			startClick,		///< start click widget
+			stopClick,		///< stop click widget
+			click,			///< click widget
+			textEntered,	///< entered text
 		};
 
 		CommandType type;			///< specify message type of the object
@@ -135,7 +135,7 @@ namespace gui
 	protected:
 		GuiCommand commander; ///< Object of class which handle sending commands
 	};
-}
+} // namespace gui
 
 /*!
 * \class gui::CommandHandler
@@ -143,6 +143,17 @@ namespace gui
 * gui::CommandHandler is abstract class which handle command driven programming technique.
 * Command is send from one object to one or multiple other objects. In command driven programming, sender
 * specify which objects will get the command message.
-* Any class which wants to send or receive commands should derive from this class.
+* In order to use commands in right way:
+* - All classes which wants to send or receive commands should derive from abstract class gui::CommandHandler and override its method
+*	virtual void handleCommand(CommandHandler * const sender, const CommandArgs  & args), which handle all receiving commands.
+* - In order to send command, call operator() or method send() on gui::GuiCommand commander object implemented inside gui::CommandHandler class. First argument
+*	of this methods specify sender of command and second argument specify receiver of this command.
+* Example of usage:
+* \code
+* ...
+* commander.args.type = CommandArgs::CommandType::stopHover;
+* commander(this, m_hoveredWidget->get());
+* ...
+* \endcode
 *
 */

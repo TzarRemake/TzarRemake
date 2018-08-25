@@ -25,7 +25,7 @@
 namespace gui
 {
 
-	EditBox::EditBox(InputValidation inpValidation, sf::Vector2f size, sf::Color normColor) :
+	EditBox::EditBox(InputKeyValidation inpValidation, sf::Vector2f size, sf::Color normColor) :
 		Widget{ normColor }, m_inpValidation{ inpValidation }
 	{
 		// initialize vertices
@@ -86,8 +86,27 @@ namespace gui
 					}
 					default: // default key entered
 					{
-						std::string Text = m_text.getString();
 						char c = static_cast<char>(args.unicodeCharacter);
+						std::string Text = m_text.getString();
+						switch (m_inpValidation)
+						{
+							case InputKeyValidation::ASCI_STANDARD:
+							{
+								if (c > 128)
+								{
+									return;
+								}
+								break;
+							}
+							//case InputKeyValidation::ASCI_EXTENDED:
+							//{
+							//	if (c > 255)
+							//	{
+							//		return;
+							//	}
+							//	break;
+							//}
+						}
 						m_text.setString(Text + c);
 						updateCursorPosition();
 						break;

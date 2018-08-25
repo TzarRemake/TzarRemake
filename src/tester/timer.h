@@ -38,7 +38,7 @@ namespace tester
 	//--------------------------------------------------------------------------
 
 	/*!
-	* \biref Used to measure time.
+	* \brief Used to measure time.
 	*
 	* This class can be used to measure time and output this into SFML object sf::Text.
 	* 
@@ -123,10 +123,9 @@ namespace tester
 	//--------------------------------------------------------------------------
 
 	/*!
-	* \biref Used to measure time.
+	* \brief Used to measure time.
 	*
 	* This class can be used to measure time and output this into SFML object sf::Text.
-	*
 	*
 	*/
 	template<TimerID ID>

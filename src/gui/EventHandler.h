@@ -24,7 +24,7 @@
 
 //--------------------------------------------------------------------------
 
-#include "Delegate.h"
+#include "../logic/Delegate.h"
 
 //--------------------------------------------------------------------------
 
@@ -74,11 +74,11 @@ namespace gui
 		};
 
 		EventType type;			///< specify event type of the object
+		void * widgetPointer;	///< Pointer to choosen widget
 
 		/*!
 		 * \brief This union specify additional event information
 		 */
-		void * widgetPointer;		///< Pointer to choosen widget
 		union
 		{
 			char character;				///< character
@@ -103,7 +103,7 @@ namespace gui
 		GuiEvent & operator=(GuiEvent & obj) = delete;	///< Deleted assignement operator
 		GuiEvent & operator=(GuiEvent && obj) = default;///< Move assignement operator
 
-		/*
+		/*!
 		* \brief Raise event
 		*
 		* This is overloaded operator() which subscribe event and inform all listeners.
@@ -126,12 +126,41 @@ namespace gui
 		* \param delegate Delegate object added to vector of listeners 
 		*
 		*/
-		void operator += (const Delegate<void(void*, const EventArgs*)> & delegate)
+		void operator += (const logic::Delegate<void(void*, const EventArgs*)> & delegate)
 		{
 			m_delegates.emplace_back(delegate);
 		}
 
 	private:
-		std::vector<Delegate<void(void*, const EventArgs*)>> m_delegates; ///< Vector of all delegate functions to call when event is raised
+		std::vector<logic::Delegate<void(void*, const EventArgs*)>> m_delegates; ///< Vector of all delegate functions to call when event is raised
 	};
-}
+} // namespace gui
+
+/*!
+* \class gui::GuiEvent
+*
+* gui::GuiEvent is class which handle event driven programming technique.
+* In order to use events there is couple mandatory things to do:
+* - Declare gui::GuiEvent object inside class which will raise event (subscriber class) as a public member. Standard is to use name which indicate type of event
+*   for example leftMouseClicked. Public access allow other objects to listen to this event.
+* - Define method which takes const reference to gui::EventArgs as paremeter and return void inside class which will raise event as a protected member.
+*	Inside this function there should be call to operator() over apropriate gui::GuiEvent object. Function definition can
+*	look like this:
+*	\code
+* void onLeftMouseClicked(const gui::EventArgs & args)
+* {
+*	leftMouseClicked(this, args);
+* }
+*	\endcode
+* - Define method which takes void pointer and const pointer to gui::EventArgs as paremeters and return void. This function should be defined inside class
+*	which wants to listen to raised event.
+*	Function definition can look like this:
+*	\code
+* void onLeftMouseClicked(void * sender, const gui::EventArgs * args)
+* {
+* ...
+* }
+*	\endcode
+* - Create logic::Delegate from this method and add it to gui::EventHandler by operator+
+* - In order to raise event create gui::EventArgs local object and call protected method inside subscriber class object.
+*/

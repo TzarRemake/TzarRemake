@@ -178,12 +178,12 @@ private:
 
 	std::vector<CostTile> m_costTileGrid;								///< grid of cost tiles
 	std::vector<CostTile> m_costTileGrid2;								///< grid of cost tiles used for bidirectional algorithm
-	std::unique_ptr<BinaryHeapTiles<CostTile*>> m_openSet;				///< open set for cost tiles stored on binary heap allocator
-	std::unique_ptr<CloseSet<CostTile*>> m_closeSet;					///< close set for cost tiles
-	std::unique_ptr<BinaryHeapTiles<CostTile*>> m_openSet2;				///< open set for cost tiles stored on binary heap allocator used for bidirectional algorithm
-	std::unique_ptr<CloseSet<CostTile*>> m_closeSet2;					///< close set for cost tiles used for bidirectional algorithm
+	std::unique_ptr<logic::BinaryHeapTiles<CostTile*>> m_openSet;		///< open set for cost tiles stored on binary heap allocator
+	std::unique_ptr<logic::CloseSet<CostTile*>> m_closeSet;				///< close set for cost tiles
+	std::unique_ptr<logic::BinaryHeapTiles<CostTile*>> m_openSet2;		///< open set for cost tiles stored on binary heap allocator used for bidirectional algorithm
+	std::unique_ptr<logic::CloseSet<CostTile*>> m_closeSet2;			///< close set for cost tiles used for bidirectional algorithm
 
-	std::unique_ptr<HeapArray<CostTile*>> m_neighbours;					///< vector of all neighbours
+	std::unique_ptr<logic::LogicArrayPtr<CostTile*>> m_neighbours;			///< vector of all neighbours
 
 
 	std::vector<sf::Vector2i> testVector;	//--

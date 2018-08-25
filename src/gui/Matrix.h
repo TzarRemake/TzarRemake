@@ -35,7 +35,7 @@ namespace mat
 	{
 	public:
 		/*!
-		 * \brief Constructor
+		 * \brief Default Constructor
 		 *
 		 * \param width Width of the matrix
 		 * \param height Height of the matrix
@@ -118,6 +118,8 @@ namespace mat
 		 *
 		 * \param width Width of the node
 		 * \param height Height of the node
+		 *
+		 * \throws std::out_of_range
 		 *
 		 * \return Reference to value inside specified node of the matrix
 		 *

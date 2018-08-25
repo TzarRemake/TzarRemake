@@ -163,13 +163,13 @@ namespace gui
 					m_containers.back().attachObject(std::move(button_M1));
 
 					// EditBox check
-					auto editBox_M1 = std::make_unique<gui::EditBox>(InputValidation::ALL_TEXT, sf::Vector2f(500.f, 30.f), sf::Color(35, 35, 35));
+					auto editBox_M1 = std::make_unique<gui::EditBox>(EditBox::InputKeyValidation::ASCI_STANDARD, sf::Vector2f(500.f, 30.f), sf::Color(35, 35, 35));
 					editBox_M1->setPosition(sf::Vector2f(100.f, 141.f + 301.f));	// 1- 299/93
 					editBox_M1->initText("EditBox not fully developed yet.", *resources.holder<sf::Font>().get("FONT_TAHOME"), sf::Vector2f(2.f,3.f), 10, sf::Text::Bold, sf::Color(235, 235, 235));
 					editBox_M1->setCallBack([this]() {
 						std::cout << "EditBox callback: " << std::endl;
 					});
-					auto bDel = gui::Delegate<void(void*, const gui::EventArgs*)>::factory<EditBox, &EditBox::onLeftMouseClicked>(editBox_M1.get());
+					auto bDel = logic::Delegate<void(void*, const gui::EventArgs*)>::factory<EditBox, &EditBox::onLeftMouseClicked>(editBox_M1.get());
 					m_containers.back().leftMouseClicked += bDel;
 					m_containers.back().attachObject(std::move(editBox_M1));
 
@@ -243,9 +243,8 @@ namespace gui
 
 	//--------------------------------------------------------------------------
 
-	void ProgramGUI::updateContainer()
+	void ProgramGUI::purgeContainer()
 	{
-		//if(m_containerID >= 0)
 		auto m_containerTest = m_containers.begin() + m_newContainerID;
 		if (m_containerTest == m_container)
 		{
@@ -253,14 +252,11 @@ namespace gui
 		}
 		else
 		{
-			m_container->restart();
-			m_container = m_containers.begin() + m_newContainerID;
+			// restart containers if there was some change
+			//? should both container be restarted
+			m_container->restart(); // restart previous container
+			m_containerTest->restart(); // restart next container
+			m_container = m_containerTest;
 		}
 	}
-
-	//void ProgramGUI::changeContainer(state::MenuContainerID containerID)
-	//{
-	//	m_container->restart();
-	//	m_container = m_containers.begin() + containerID;
-	//}
-}
+} // namespace gui

@@ -58,13 +58,9 @@ namespace gui
 		/*!
 		 * \brief Create all gui elements inside gui::Container
 		 *
-		 * This is main constructor of gui. sf::Rect parameter specify range in which gui objects
-		 * will be drawed on main window. For best memory usage,  area of this rectangle 
-		 * should be as low as possible.
-		 *
 		 * \param state Pointer to state which created and hold this gui instance
 		 * \param engine Pointer to main game engine
-		 * \param gType Type of created gui
+		 * \param gType Type of created gui specified by enum GuiType
 		 * \param mhType Algorithm used to search for appropriate widget with mouse events
 		 *
 		 * \see gui::Container
@@ -81,7 +77,9 @@ namespace gui
 		ProgramGUI & operator=(ProgramGUI && obj) = delete;	///< Deleted move assignement operator
 
 		/*!
-		* \brief Handle event for gui
+		* \brief Handle sf::Event for gui
+		*
+		* This function is called from engine whenever some event occured which could change something in gui.
 		*
 		* \param event Reference to sfml event
 		*
@@ -111,16 +109,13 @@ namespace gui
 		void draw(sf::RenderWindow & window);
 
 		/*!
-		* \brief Change actually managed and drawed container to new one choosen in handleEvent phase
+		* \brief Ensures that container was changed in right way
 		*
 		* This function should be used in every program iteration in update phase. This ensures that changes to actually used
 		* container submenu are submitted.
 		*
 		*/
-		void updateContainer();
-
-		
-
+		void purgeContainer();
 
 		/*!
 		* \brief Change actually active container
@@ -142,11 +137,12 @@ namespace gui
 
 		ResourceManager<MAIN_RESOURCES> resources;	///< Recources manager (fonts, textures, etc..)
 	};
-}
+} // namespace gui
 
 /*!
  * \class gui::ProgramGUI
  *
- * gui::ProgramGUI Gather all GUI objects which are used to communicate with user.
+ * gui::ProgramGUI Gather all GUI objects which are used to communicate with user. Type of gui is choosen by enum gui::GuiType.
+ * Gui can have multiple containers with sorted gui objects and only one container can be choosen at one time.
  *
  */

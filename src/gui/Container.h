@@ -32,22 +32,22 @@ namespace gui
 {
 	/*!
 	 * \brief Container GUI class
-	 *
-	 * Object of this class hold information about all other GUI objects which derive from gui::Widget class.
-	 *
 	 */
 	class Container : public Widget
 	{
 	public:
 		/*!
-		* \brief Container constructor
+		* \brief Default constructor
 		*
 		* \param mhType Algorithm used to search for appropriate widget with mouse events
 		*
 		*/
 		Container(MouseHandlingType mhType);
 		~Container();
+		Container(const Container & obj) = delete;
 		Container(Container && obj);
+		Container & operator=(Container & obj) = delete;
+		Container & operator=(Container && obj) = delete;
 
 		//--------------------------------------------------------------------------
 
@@ -79,10 +79,10 @@ namespace gui
 		void handleEvents(sf::Event& event);
 
 		/*!
-		* \brief Restart container to it's initial state
+		* \brief Restart container to it's initial state by assigning iterators to std::vector::end
 		*
-		* This function should be called after initializing all widget childrens and whenever new container is choosen
-		* in menu
+		* This function should be called after attaching any widget children to container in order to secure that all iterators are pointing to std::vector::end.
+		* Second situation to use this function is when actually used container is switched. Then restarting iterators my be needed.
 		*
 		*/
 		void restart()
@@ -95,7 +95,8 @@ namespace gui
 		/*!
 		* \brief Get iterator to widget
 		*
-		* This function return iterator
+		* This function search std::vector of widget childrens and return iterator to widget located in given position. 
+		* If no widget is present in given position, then iterator to std::vector::end is returned.
 		*
 		* \param position Position on the window
 		*
@@ -145,6 +146,7 @@ namespace gui
 				m_boundary.height = bounds.width + bounds.top - m_boundary.top;
 
 			m_Children.push_back(std::move(widget));
+			restart();
 		}
 
 		/*!
@@ -170,6 +172,8 @@ namespace gui
 		*
 		* This function should be used when container wants to subscribe event leftMouseClicked.
 		* All event listeners will be informed and it's appropriate functions will be called.
+		*
+		* \param args Const reference to event arguments which will be send to listeners
 		*
 		*/
 		void onLeftMouseClicked(const gui::EventArgs & args)
@@ -212,4 +216,10 @@ namespace gui
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_clickedWidget; ///< Iterator to actually clicked Widget(choosen with left mouse down)
 		std::vector<std::unique_ptr<gui::Widget>>::iterator m_choosenWidget; ///< iterator to choosen(active) widget
 	};
-}
+} // namespace gui
+
+/*!
+* \class gui::Container
+*
+* Object of this class hold information about all other GUI objects which derive from gui::Widget class.
+*/

@@ -26,13 +26,6 @@
 
 namespace gui
 {
-	/*!
-	* \brief ??
-	*/
-	enum class InputValidation
-	{
-		ALL_TEXT = 255,
-	};
 
 	/*!
 	 * \brief EditBox GUI class
@@ -40,12 +33,29 @@ namespace gui
 	class EditBox : public Widget
 	{
 	public:
-		EditBox(InputValidation m_inpValidation, sf::Vector2f size, sf::Color normColor = sf::Color(0, 0, 0));
+		/*!
+		* \brief Specify way of validaing input from keyboard
+		*/
+		enum class InputKeyValidation
+		{
+			ASCI_STANDARD, ///< accepts only standard 0-127 ASCII 
+			ASCI_EXTENDED, ///< accept extended 0-255 ASCII
+		};
+
+		/*
+		* \brief Default COnstructor
+		*
+		* \param m_inpValidation Way in which EditBox will validate input from keyboard
+		* \param size Size of EditBox
+		* \param normColor Standrd color of EditBox
+		*
+		*/
+		EditBox(InputKeyValidation m_inpValidation, sf::Vector2f size, sf::Color normColor = sf::Color(0, 0, 0));
 		~EditBox();
-		EditBox(const EditBox & obj);
-		EditBox(EditBox && obj);
-		EditBox & operator=(EditBox & obj);
-		EditBox & operator=(EditBox && obj);
+		EditBox(const EditBox & obj) = delete;
+		EditBox(EditBox && obj) = delete;
+		EditBox & operator=(EditBox & obj) = delete;
+		EditBox & operator=(EditBox && obj) = delete;
 
 		//--------------------------------------------------------------------------
 
@@ -137,6 +147,12 @@ namespace gui
 
 		/*!
 		* \brief Function which can be used to catch left mouse click events
+		*
+		* This function is used for catching left mouse click events.
+		*
+		* \param sender Pointer to object which raised event
+		* \param args Const pointer to event arguments
+		*
 		*/
 		void onLeftMouseClicked(void * sender, const gui::EventArgs * args)
 		{
@@ -198,11 +214,16 @@ namespace gui
 		sf::Rect<float> m_floatRect;		///< Local bounding rectangle of editBox
 		std::function<void()> m_callback;	///< Object which holds function callback which occur when widget is pressed
 		sf::Texture * m_texture;			///< Pointer to texture objects
-		InputValidation m_inpValidation;	///< indicates what type of input is valid
+		InputKeyValidation m_inpValidation;	///< indicates what type of input is valid
 
 		constexpr static const float blinkTime = 0.5f;	///< amount of time between blinks
 		float m_timer = -100000.f;				///< Timer for cursor blinking
 	};
-}
+} // namespace gui
 
+/*!
+* \class gui::EditBox
+*
+* This class create widget with editable text placed on it.
+*/
 

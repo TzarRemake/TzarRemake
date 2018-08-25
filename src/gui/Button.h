@@ -34,7 +34,7 @@ namespace gui
 	{
 	public:
 		/*!
-		 * \brief Create button gui object
+		 * \brief Default constructor
 		 *
 		 * \param size Size of rectangle button
 		 * \param normColor Standard color of button
@@ -42,10 +42,10 @@ namespace gui
 		 */
 		Button(sf::Vector2f size, sf::Color normColor = sf::Color(0,0,0));
 		virtual ~Button();
-		Button(const Button & obj);
-		Button(Button && obj);
-		Button & operator=(Button & obj);
-		Button & operator=(Button && obj);
+		Button(const Button & obj) = delete;
+		Button(Button && obj) = delete;
+		Button & operator=(Button & obj) = delete;
+		Button & operator=(Button && obj) = delete;
 
 		//--------------------------------------------------------------------------
 
@@ -161,4 +161,11 @@ namespace gui
 		sf::Rect<float> m_floatRect;		///< Local bounding rectangle of button
 		std::function<void()> m_callback;	///< Object which holds function callback which occur when button is pressed
 	};
-}
+} // namespace gui
+
+/*!
+* \class gui::Button
+*
+* gui::Button is used to create button widget, which can be clicked.
+*
+*/

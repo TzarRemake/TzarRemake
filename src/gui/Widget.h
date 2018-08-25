@@ -40,7 +40,7 @@
 namespace gui
 {
 	/*!
-	* \brief Specify way of handling mouse events
+	* \brief Specify way of handling search for widget found under mouse position
 	*/
 	enum class MouseHandlingType
 	{
@@ -56,6 +56,12 @@ namespace gui
 					public gui::CommandHandler
 	{
 	public:
+		/*
+		* \brief Default constructor
+		*
+		* \param normColor Standard color of widget
+		*
+		*/
 		Widget(sf::Color normColor):
 			m_normTexture{nullptr}, m_hoverTexture{nullptr}, m_clickedTexture{nullptr},
 			m_normColor{ normColor }, m_hoverColor{0,0,0}, m_clickedColor{0,0,0}
@@ -73,10 +79,26 @@ namespace gui
 
 		//--------------------------------------------------------------------------
 
+		/*!
+		* \brief Update widget
+		*
+		* This pure virtual function enforce all derived class to implement it's own function which 
+		* updates widget based on elapsed time. This function should be called with sf::Time parameter equal to time which passed
+		* before previous update call.
+		*
+		* \param delta Time elapsed since previous update call
+		*
+		*/
 		virtual void update(sf::Time& delta) {}
 
 		/*!
 		* \brief Get center of widget in local coordinate system
+		*
+		* This pure virtual function enforce all derived class to implement it's own function which
+		* return center of widget in local coordinate system.
+		*
+		* \return Center of widget in local coordinate system
+		*
 		*/
 		virtual sf::Vector2f getLocalCenter() const = 0;
 
@@ -100,7 +122,7 @@ namespace gui
 		* \brief This function state if texture of widget should change upon mouse hovering
 		*
 		* \param isTextureHoverable Indicates if texture change upon hover -> true or if color dont change -> false
-		* \param hoverTexture Additional parameter informing about texture of the widget upon hovering
+		* \param hoverTexture Additional parameter informing about texture of the widget upon hovering saved if previouse parameter is true
 		*
 		*/
 		void setIsTextureHoverable(bool isTextureHoverable, sf::Texture * hoverTexture = nullptr, const sf::Rect<int> & textureRect = sf::Rect<int>())
@@ -118,7 +140,7 @@ namespace gui
 		* \brief This function state if color of widget should change upon mouse hovering
 		*
 		* \param isColorHoverable Indicates if color change upon hover -> true or if color dont change -> false
-		* \param hoverColor Additional parameter informing about color of widget upon hover
+		* \param hoverColor Additional parameter informing about color of widget upon hover saved if previouse parameter is true
 		*
 		*/
 		void setIsTextureClickable(bool isTextureClickable, sf::Texture * clickedTexture = nullptr, const sf::Rect<int> & textureRect = sf::Rect<int>())
@@ -136,7 +158,7 @@ namespace gui
 		* \brief This function state if color of widget should change upon mouse hovering
 		*
 		* \param isColorHoverable Indicates if color change upon hover -> true or if color dont change -> false
-		* \param hoverColor Additional parameter informing about color of widget upon hover
+		* \param hoverColor Additional parameter informing about color of widget upon hover saved if previouse parameter is true
 		*
 		*/
 		void setIsColorHoverable(bool isColorHoverable, sf::Color hoverColor = sf::Color(0,0,0)) 
@@ -155,7 +177,7 @@ namespace gui
 		* Mouse click happens whenever user click left mouse button, but dont actually release button.
 		*
 		* \param isColorHoverable Indicates if color change upon click -> true or if color dont change -> false
-		* \param clickedColor Additional parameter informing about color of widget upon click
+		* \param clickedColor Additional parameter informing about color of widget upon click saved if previouse parameter is true
 		*
 		*/
 		void setIsColorClickable(bool isColorClickable, sf::Color clickedColor = sf::Color(0,0,0)) 
@@ -200,22 +222,45 @@ namespace gui
 
 		/*!
 		* \brief State if widget change something when hovered
+		*
+		* \param isHoverable Indicates if widget should change upon hover -> true or if widget don't change -> false
+		*
 		*/
 		void setIsHoverable(bool isHoverable) { m_isHoverable = isHoverable; }
 
 		/*!
-		* \brief State if widget is visible at all
+		* \brief State if widget is visible
+		*
+		* \param isVisible Indicates if widget is visible -> true or if widget is not visible -> false
+		*
 		*/
 		void setIsVisible(bool isVisible) { m_isVisible = isVisible; }
 
 	protected:
 		/*!
 		* \brief State if widget change something when clicked left mouse button, but without release
+		*
+		* \param isClickable Indicates if widget is clickable -> true or if widget is not clickable -> false
+		*
 		*/
 		void setIsClickable(bool isClickable) { m_isClickable = isClickable; }
 
+		/*!
+		* \brief State if widget is hovered by mouse right now
+		*
+		* \param isHovered Indicates if widget is hovered -> true or if widget is not hovered -> false
+		*
+		*/
 		void setIsHovered(bool isHovered) { m_isHovered = isHovered; }
+
+		/*!
+		* \brief State if widget is clicked by mouse right now
+		*
+		* \param isClicked Indicates if widget is clicked -> true or if widget is not clicked -> false
+		*
+		*/
 		void setIsClicked(bool isClicked) { m_isClicked = isClicked; }
+
 		/*!
 		* \brief Set texture rect
 		*
@@ -258,6 +303,14 @@ namespace gui
 		sf::Color m_normColor;				///< color of widget normal
 		sf::Color m_hoverColor;				///< color of widget after being hovered
 		sf::Color m_clickedColor;			///< color of widget after being clicked
-		sf::VertexArray m_vertices;			///< Array of vertices for button
+		sf::VertexArray m_vertices;			///< Array of vertices for widget
 	};
-}
+} // namespace gui
+
+/*!
+* \class gui::Widget
+*
+* gui::Widget is base abstract class for all widget objects ( buttons, edtibox, etc.). Any new widget should derive
+* from this class.
+*
+*/

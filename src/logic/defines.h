@@ -29,6 +29,9 @@ constexpr unsigned int WIN_HEIGHT = 600;
 constexpr unsigned int CHUNK_SIZE = 8;
 constexpr unsigned int GRID_SIZE = 256;
 
+constexpr unsigned int WIN_WIDTH_MENU = 800;
+constexpr unsigned int WIN_HEIGHT_MENU = 600;
+
 //--------------------------------------------------------------------------
 
 /*!
@@ -37,6 +40,18 @@ constexpr unsigned int GRID_SIZE = 256;
 class Functions
 {
 public:
+	/*!
+	* Exit program after pressing enter
+	*
+	* \param exitReturn Return value of program exit.
+	*/
 	static void exitCin(unsigned int exitReturn);
+
+	/*!
+	* Throw std::invalid_argument with std::string
+	*
+	* \param str Rvalue reference to std::string which will throw exception
+	*
+	*/
 	static void throwInvalidArgument(std::string && str);
 };

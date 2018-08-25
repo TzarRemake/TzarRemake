@@ -228,11 +228,12 @@ namespace gui
 						}
 						else
 						{
+							unsigned int currentKey = RectBinTree::getKey(it->rect);
 							unsigned int righChildID = RectBinTree::getChildRight(index);
 							unsigned int leftChildID = RectBinTree::getChildLeft(index);
 
 							// if positionKey is higher than current it, then go to rightChild
-							if (positionKey > RectBinTree::getKey(it->rect))
+							if (positionKey > currentKey)
 							{
 								if (it->rightChildExist)
 								{

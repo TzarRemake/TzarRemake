@@ -31,8 +31,15 @@ namespace gui
 	/*!
 	* \brief This structure keep information about rectangle objects inside binary tree allocator
 	*/
-	struct RectTree
+	struct RectNode
 	{
+		RectNode() = default;
+		~RectNode() noexcept {}
+		//RectNode(const RectNode & obj) = default;
+		//RectNode(RectNode && obj) = default;
+		//RectNode & operator=(RectNode & obj) = default;
+		//RectNode & operator=(RectNode && obj) = default;
+
 		sf::Rect<int> rect;				///< boundary rectangle
 		int tab;						///< id of object
 		bool leftChildExist = false;	///< indicates if left child in binary tree exist
@@ -42,14 +49,24 @@ namespace gui
 	//--------------------------------------------------------------------------
 
 	/*!
-	* \biref Binary tree of sf::Rect
+	* \brief Binary tree of gui::RectNode objects
+	*
+	* This is binary search tree built on top of std::vector. In this tree every node on the right of it's parent has higher key value and every
+	* node on the left has lower key value. This allows to use binary search
+	*
 	*/
 	class RectBinTree
 	{
 	public:
-		RectBinTree(unsigned int size = 0)
+		/*!
+		* \brief Default constructor
+		*
+		* \param reserved Reserved amount of items inside std::vector<gui::RectTree> objects
+		*
+		*/
+		RectBinTree(unsigned int reserved = 0)
 		{
-			m_items.reserve(size);
+			m_items.reserve(reserved);
 		}
 		RectBinTree(RectBinTree && obj)
 		{
@@ -63,16 +80,19 @@ namespace gui
 		~RectBinTree() {}
 
 		/*!
-		* \brief Insert element in bin tree
+		* \brief Insert element into binary tree
+		*
+		* \param item Reference to sf::Rect<int> object
+		*
 		*/
 		void insert(sf::Rect<int> & item)
 		{
 			int key = getKey(item);
 			int size = m_items.size();
-			if (size > 0)
+			if (m_tab >= 0)
 			{
-				unsigned int parentID = 0;
-				bool itemPlaced = false;
+				unsigned int parentID = 0; // starting parent id
+				bool itemPlaced = false; // indicates if item was placed
 				while (!itemPlaced)
 				{
 					unsigned int rightChildID = getChildRight(parentID);
@@ -84,7 +104,7 @@ namespace gui
 						{
 							if (size == rightChildID)
 							{
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								tempRect.tab = ++m_tab;
 								m_items.push_back(tempRect);
@@ -94,7 +114,7 @@ namespace gui
 							else if (size < rightChildID)
 							{
 								m_items.resize(rightChildID + 1);
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								tempRect.tab = ++m_tab;
 								m_items[rightChildID] = tempRect;
@@ -103,7 +123,7 @@ namespace gui
 							}
 							else
 							{
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								m_items[rightChildID] = tempRect;
 								tempRect.tab = ++m_tab;
@@ -121,7 +141,7 @@ namespace gui
 						{
 							if (size == leftChildID)
 							{
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								tempRect.tab = ++m_tab;
 								m_items.push_back(tempRect);
@@ -131,7 +151,7 @@ namespace gui
 							else if (size < leftChildID)
 							{
 								m_items.resize(leftChildID + 1);
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								tempRect.tab = ++m_tab;
 								m_items[leftChildID] = tempRect;
@@ -140,7 +160,7 @@ namespace gui
 							}
 							else
 							{
-								RectTree tempRect;
+								RectNode tempRect;
 								tempRect.rect = item;
 								tempRect.tab = ++m_tab;
 								m_items[leftChildID] = tempRect;
@@ -159,25 +179,35 @@ namespace gui
 			}
 			else
 			{
-				RectTree tempRect;
+				RectNode tempRect;
 				tempRect.rect = item;
-				tempRect.tab = m_tab;
+				tempRect.tab = ++m_tab;
 				m_items.push_back(tempRect);
 			}
 		}
 
 		/*!
 		* \brief Get key value of item for sorting purpose
+		*
+		* \param item Const reference to sf::Rect<int>
+		*
+		* \return Integer number which is key calculated from input parameter
+		*
 		*/
-		static int getKey(sf::Rect<int> & item)
+		static int getKey(const sf::Rect<int> & item)
 		{
 			int centerY = item.top + item.height / 2;
 			int centerX = item.left + item.width / 2;
-			return centerX + centerY*WIN_WIDTH;
+			return centerX + centerY*WIN_WIDTH_MENU;
 		}
 
 		/*!
 		* \brief Get index of the parent
+		*
+		* \param index Input node index
+		*
+		* \return Index of parent node
+		*
 		*/
 		static unsigned int getParent(unsigned int index) noexcept
 		{
@@ -186,6 +216,11 @@ namespace gui
 
 		/*!
 		* \brief Get index of left child
+		*
+		* \param index Input node index
+		*
+		* \return Index of left child node
+		*
 		*/
 		static unsigned int getChildLeft(unsigned int index) noexcept
 		{
@@ -194,37 +229,72 @@ namespace gui
 
 		/*!
 		* \brief Get index of right child
+		*
+		* \param index Input node index
+		*
+		* \return Index of left children node
+		*
 		*/
 		static unsigned int getChildRight(unsigned int index)
 		{
 			return index * 2 + 2;
 		}
 
-		std::vector<RectTree>::iterator end()
+		/*!
+		* \brief Get iterator to end of vector
+		*
+		* \return Iterator to end of vector
+		*
+		*/
+		std::vector<RectNode>::iterator end()
 		{
 			return m_items.end();
 		}
 
-		std::vector<RectTree>::iterator begin()
+		/*!
+		* \brief Get iterator to begin of vector
+		*
+		* \return Iterator to begin of vector
+		*
+		*/
+		std::vector<RectNode>::iterator begin()
 		{
 			return m_items.begin();
 		}
 
-		std::vector<RectTree>::const_iterator cend() const
+		/*!
+		* \brief Get const iterator to end of vector
+		*
+		* \return Const iterator to end of vector
+		*
+		*/
+		std::vector<RectNode>::const_iterator cend() const
 		{
 			return m_items.cend();
 		}
 
-		std::vector<RectTree>::const_iterator cbegin() const
+		/*!
+		* \brief Get const iterator to begin of vector
+		*
+		* \return Const iterator to begin of vector
+		*
+		*/
+		std::vector<RectNode>::const_iterator cbegin() const
 		{
 			return m_items.cbegin();
 		}
 
+		/*!
+		* \brief Get size of vector inside Tree
+		*
+		* \return Size of vector inside Tree
+		*
+		*/
 		unsigned int size() const { return m_items.size(); }
 
 	private:
-		std::vector<RectTree> m_items;
-		int m_tab = 0;
+		std::vector<RectNode> m_items;	///< Main vector
+		int m_tab = -1;					///< Id of last RectNode added into vector
 	};
 
 	//--------------------------------------------------------------------------
@@ -232,114 +302,114 @@ namespace gui
 	/*!
 	* \biref Binary tree which stores lowest object on top
 	*/
-	class ContainerBinTree
-	{
-	public:
-		ContainerBinTree(unsigned int size = 0)
-		{
-			m_items.reserve(size);
-		}
-		ContainerBinTree(ContainerBinTree && obj)
-		{
-			m_items = std::move(obj.m_items);
-		}
-		ContainerBinTree & operator=(ContainerBinTree && obj)
-		{
-			m_items = std::move(obj.m_items);
-			return *this;
-		}
-		//ContainerBinTree & operator=(ContainerBinTree & obj)
-		//{
-		//	m_items = std::move(obj.m_items);
-		//	return *this;
-		//}
-		~ContainerBinTree() noexcept
-		{
+	//class ContainerBinTree
+	//{
+	//public:
+	//	ContainerBinTree(unsigned int size = 0)
+	//	{
+	//		m_items.reserve(size);
+	//	}
+	//	ContainerBinTree(ContainerBinTree && obj)
+	//	{
+	//		m_items = std::move(obj.m_items);
+	//	}
+	//	ContainerBinTree & operator=(ContainerBinTree && obj)
+	//	{
+	//		m_items = std::move(obj.m_items);
+	//		return *this;
+	//	}
+	//	//ContainerBinTree & operator=(ContainerBinTree & obj)
+	//	//{
+	//	//	m_items = std::move(obj.m_items);
+	//	//	return *this;
+	//	//}
+	//	~ContainerBinTree() noexcept
+	//	{
+	//
+	//	}
+	//
+	//	/*!
+	//	* \brief Adds new element to the Tree
+	//	*
+	//	* \param item Reference to item
+	//	*
+	//	*/
+	//	void add(std::unique_ptr<Widget> item)
+	//	{
+	//		m_items.push_back(std::move(item));
+	//
+	//		// check if new item is not on top of the tree
+	//		if (m_items.size() > 1)
+	//		{
+	//			unsigned int index = m_items.size() - 1;
+	//			while (true)
+	//			{
+	//				unsigned int parentIndex = getParent(index);
+	//				sf::Vector2f center = m_items[index]->getLocalCenter();
+	//				sf::Vector2f parentCenter = m_items[parentIndex]->getLocalCenter();
+	//				if ((center.x + center.y*WIN_WIDTH) < (parentCenter.x + parentCenter.y*WIN_WIDTH))
+	//				{
+	//					std::swap(m_items[index], m_items[parentIndex]);
+	//				}
+	//				else
+	//					break;
+	//
+	//				if (parentIndex == 0)
+	//					break;
+	//				else
+	//					index = parentIndex;
+	//			}
+	//		}
+	//	}
+	//
+	//	/*!
+	//	* \brief Get index of the parent
+	//	*/
+	//	unsigned int getParent(unsigned int index) const noexcept
+	//	{
+	//		return (index - 1) / 2;
+	//	}
+	//
+	//	/*!
+	//	* \brief Get index of left child
+	//	*/
+	//	unsigned int getChildLeft(unsigned int index) const noexcept
+	//	{
+	//		return index * 2 + 1;
+	//	}
+	//
+	//	/*!
+	//	* \brief Get index of right child
+	//	*/
+	//	unsigned int getChildRight(unsigned int index) const
+	//	{
+	//		return index * 2 + 2;
+	//	}
+	//
+	//	std::vector<std::unique_ptr<Widget>>::iterator end()
+	//	{
+	//		return m_items.end();
+	//	}
+	//
+	//	std::vector<std::unique_ptr<Widget>>::iterator begin()
+	//	{
+	//		return m_items.begin();
+	//	}
+	//
+	//	std::vector<std::unique_ptr<Widget>>::const_iterator cend() const
+	//	{
+	//		return m_items.cend();
+	//	}
+	//
+	//	std::vector<std::unique_ptr<Widget>>::const_iterator cbegin() const
+	//	{
+	//		return m_items.cbegin();
+	//	}
+	//
+	//	unsigned int size() const { return m_items.size(); }
+	//
+	//private:
+	//	std::vector<std::unique_ptr<Widget>> m_items;	///< vector of all widgets
+	//};
 
-		}
-
-		/*!
-		* \brief Adds new element to the Tree
-		*
-		* \param item Reference to item
-		*
-		*/
-		void add(std::unique_ptr<Widget> item)
-		{
-			m_items.push_back(std::move(item));
-
-			// check if new item is not on top of the tree
-			if (m_items.size() > 1)
-			{
-				unsigned int index = m_items.size() - 1;
-				while (true)
-				{
-					unsigned int parentIndex = getParent(index);
-					sf::Vector2f center = m_items[index]->getLocalCenter();
-					sf::Vector2f parentCenter = m_items[parentIndex]->getLocalCenter();
-					if ((center.x + center.y*WIN_WIDTH) < (parentCenter.x + parentCenter.y*WIN_WIDTH))
-					{
-						std::swap(m_items[index], m_items[parentIndex]);
-					}
-					else
-						break;
-
-					if (parentIndex == 0)
-						break;
-					else
-						index = parentIndex;
-				}
-			}
-		}
-
-		/*!
-		* \brief Get index of the parent
-		*/
-		unsigned int getParent(unsigned int index) const noexcept
-		{
-			return (index - 1) / 2;
-		}
-
-		/*!
-		* \brief Get index of left child
-		*/
-		unsigned int getChildLeft(unsigned int index) const noexcept
-		{
-			return index * 2 + 1;
-		}
-
-		/*!
-		* \brief Get index of right child
-		*/
-		unsigned int getChildRight(unsigned int index) const
-		{
-			return index * 2 + 2;
-		}
-
-		std::vector<std::unique_ptr<Widget>>::iterator end()
-		{
-			return m_items.end();
-		}
-
-		std::vector<std::unique_ptr<Widget>>::iterator begin()
-		{
-			return m_items.begin();
-		}
-
-		std::vector<std::unique_ptr<Widget>>::const_iterator cend() const
-		{
-			return m_items.cend();
-		}
-
-		std::vector<std::unique_ptr<Widget>>::const_iterator cbegin() const
-		{
-			return m_items.cbegin();
-		}
-
-		unsigned int size() const { return m_items.size(); }
-
-	private:
-		std::vector<std::unique_ptr<Widget>> m_items;	///< vector of all widgets
-		//std::vector<unsigned int> m_id;					///< vector of id to widgets
-	};
-}
+}  // namespace gui

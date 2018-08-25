@@ -59,11 +59,11 @@ PathingSystem::PathingSystem(Grid * originGrid) :
 			}
 		}
 	}
-	m_openSet = std::make_unique<BinaryHeapTiles<CostTile*>>(m_gridSize);
-	m_closeSet = std::make_unique<CloseSet<CostTile*>>(m_gridSize);
+	m_openSet = std::make_unique<logic::BinaryHeapTiles<CostTile*>>(m_gridSize);
+	m_closeSet = std::make_unique<logic::CloseSet<CostTile*>>(m_gridSize);
 
 	// neighbours used in bidirectional and non bidrectional search
-	m_neighbours = std::make_unique<HeapArray<CostTile*>>(8);
+	m_neighbours = std::make_unique<logic::LogicArrayPtr<CostTile*>>(8);
 
 	// initialize variables for bidirectional search  
 	m_costTileGrid2.reserve(originGrid->getGridSize().x*originGrid->getGridSize().y);
@@ -84,8 +84,8 @@ PathingSystem::PathingSystem(Grid * originGrid) :
 			}
 		}
 	}
-	m_openSet2 = std::make_unique<BinaryHeapTiles<CostTile*>>(m_gridSize);
-	m_closeSet2 = std::make_unique<CloseSet<CostTile*>>(m_gridSize);
+	m_openSet2 = std::make_unique<logic::BinaryHeapTiles<CostTile*>>(m_gridSize);
+	m_closeSet2 = std::make_unique<logic::CloseSet<CostTile*>>(m_gridSize);
 }
 
 //--------------------------------------------------------------------------
